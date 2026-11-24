@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sheet Dek | ดาวน์โหลดไฟล์สำเร็จ</title>
+    <style>
+        :root {
+            --primary-color: #5e0606;
+            --secondary-color: #555555;
+            --success-color: #008000;
+            --success-light: #e8f5e9;
+            --accent-color: #FFD700;
+            --white: #ffffff;
+            --light-grey: #f4f4f4;
+            --border-color: #e0e0e0;
+            --font-color: #333333;
+            --box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            --old-primary-color: #920000;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            transition: all 0.2s ease-in-out;
+        }
+
+        body {
+            background-color: var(--light-grey);
+            line-height: 1.6;
+            color: var(--font-color);
+            padding-top: 64px;
+        }
+
+        /* Header */
+        .main-header {
+            width: 100%;
+            background-color: var(--primary-color);
+            color: var(--white);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 40px;
+            font-weight: bold;
+            flex-grow: 1;
+            text-align: center;
+        }
+
+        .header-icons {
+            display: flex;
+            align-items: center;
+        }
+
+        .icon-link {
+            color: var(--white);
+            text-decoration: none;
+            font-size: 20px;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .profile-dropdown {
+            position: relative;
+            margin-left: 15px;
+        }
+
+        .profile-link {
+            background-color: var(--white);
+            padding: 0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+        }
+        .profile-link img {
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .profile-link:hover {
+            outline: 2px solid var(--white);
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 45px;
+            right: 0;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+            padding: 10px 0;
+            display: none;
+            width: 150px;
+            z-index: 10;
+        }
+        .dropdown-menu a {
+            display: block;
+            padding: 10px 15px;
+            color: var(--font-color);
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .dropdown-menu a:hover {
+            background: #eee;
+            color: var(--primary-color);
+        }
+
+        /* Page Layout & Success Box */
+        .download-page-content {
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .success-box {
+            background-image: linear-gradient(135deg, var(--success-light) 0%, #d4edda 100%);
+            border: 1px solid var(--success-color);
+            padding: 40px 30px;
+            border-radius: 18px;
+            margin-bottom: 50px;
+            box-shadow: 0 10px 30px rgba(0, 128, 0, 0.15);
+        }
+
+        .success-icon {
+            font-size: 5em;
+            display: block;
+            margin-bottom: 20px;
+            color: var(--success-color);
+            text-shadow: 2px 2px 4px rgba(0, 128, 0, 0.2);
+        }
+
+        .success-title {
+            font-size: 2.4em;
+            color: var(--success-color);
+            margin-bottom: 10px;
+            font-weight: 800;
+        }
+
+        .success-subtitle {
+            font-size: 1.1em;
+            color: var(--secondary-color);
+            margin-bottom: 15px;
+        }
+
+        .order-id-text {
+            font-size: 1.1em;
+            color: var(--secondary-color);
+            font-weight: 500;
+            padding: 5px 15px;
+            background-color: var(--white);
+            display: inline-block;
+            border-radius: 8px;
+            border: 1px dashed var(--border-color);
+            margin-bottom: 5px;
+        }
+
+        .order-total-text {
+            font-size: 1.1em;
+            color: var(--font-color);
+            margin-top: 5px;
+        }
+
+        /* Download List Section */
+        .download-list-section {
+            background-color: var(--white);
+            padding: 30px 40px;
+            border-radius: 18px;
+            box-shadow: var(--box-shadow);
+            text-align: left;
+        }
+
+        .section-heading {
+            font-size: 1.8em;
+            color: var(--old-primary-color);
+            border-bottom: 2px solid var(--light-grey);
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+            font-weight: 700;
+        }
+
+        .download-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .download-item:last-child {
+            border-bottom: none;
+        }
+
+        .file-details {
+            flex-grow: 1;
+            margin-right: 10px;
+        }
+
+        .file-name {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+            margin: 0;
+        }
+
+        .file-meta {
+            font-size: 0.95em;
+            color: var(--secondary-color);
+            margin-top: 5px;
+        }
+
+        .btn-download {
+            background-color: var(--old-primary-color);
+            color: var(--white);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 1.05em;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            white-space: nowrap;
+            box-shadow: 0 4px 10px rgba(146, 0, 0, 0.3);
+        }
+
+        .btn-download:hover {
+            background-color: #A52A2A;
+        }
+
+        /* Note Section */
+        .important-note {
+            margin-top: 40px;
+            padding: 25px;
+            background-color: #fffde7;
+            border-left: 5px solid var(--accent-color);
+            border-radius: 12px;
+            text-align: left;
+            font-size: 1em;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .important-note p {
+            margin-bottom: 8px;
+            color: #333;
+        }
+        .important-note p:last-child {
+            margin-bottom: 0;
+        }
+
+        .btn-back-home {
+            display: inline-block;
+            margin-top: 30px;
+            background-color: var(--secondary-color);
+            color: var(--white);
+            padding: 12px 25px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-size: 1em;
+            font-weight: bold;
+        }
+
+        .empty-order-text {
+            font-size: 1.1em;
+            color: var(--secondary-color);
+            margin-top: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .download-page-content { margin: 30px auto; padding: 10px; }
+            .success-title { font-size: 2em; }
+            .download-item { flex-direction: column; align-items: flex-start; padding: 15px 0; }
+            .btn-download { width: 100%; margin-top: 10px; text-align: center; }
+            .file-meta { margin-bottom: 5px; }
+
+            .logo { font-size: 30px; }
+            body { padding-top: 54px; }
+        }
+    </style>
+</head>
+<body>
+<header class="main-header">
+    <a href="loginfinish.html" class="icon-link">หน้าหลัก</a>
+
+    <div class="logo">Sheet Dek</div>
+
+    <div class="header-icons">
+        <a href="cart.html" class="icon-link">
+            ตะกร้าชีท🛒 <span id="cartCount" style="font-weight:bold;">0</span>
+        </a>
+
+        <div class="profile-dropdown">
+            <a class="profile-link" id="profileBtn">
+                <img src="https://img.lovepik.com/png/20231123/female-flat-person-line-icon-vector-minimal-ux_673976_wh1200.png"
+                     alt="Profile Avatar"
+                     style="width:32px; height:32px;">
+            </a>
+
+            <div class="dropdown-menu" id="dropdownMenu">
+                <a href="profile.html">โปรไฟล์ของฉัน</a>
+                <a href="index.html">ออกจากระบบ</a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main class="download-page-content">
+    <div class="success-box" id="successBox">
+        <span class="success-icon">✅</span>
+        <h1 class="success-title">ชำระเงินสำเร็จ! พร้อมดาวน์โหลดชีทของคุณ</h1>
+        <p class="success-subtitle" id="successSubtitle">
+            ออเดอร์ของคุณพร้อมแล้ว สามารถดาวน์โหลดไฟล์ได้จากรายการด้านล่าง
+        </p>
+        <p class="order-id-text" id="orderIdText">
+            คำสั่งซื้อ #SD-XXXX
+        </p>
+        <p class="order-total-text" id="orderTotalText">
+            ยอดชำระรวม: ฿ 0
+        </p>
+    </div>
+
+    <section class="download-list-section" id="downloadSection">
+        <h2 class="section-heading">📚 ไฟล์ชีทที่คุณสั่งซื้อ</h2>
+        <div id="downloadList">
+            <!-- JS จะสร้างรายการไฟล์ตาม purchasedItems -->
+        </div>
+
+        <div class="important-note">
+            <p>💡 <strong>ข้อมูลเพิ่มเติม:</strong></p>
+            <p>1. ไฟล์ทั้งหมดจะถูกจัดเก็บไว้ในบัญชีของคุณ สามารถดาวน์โหลดซ้ำได้ภายหลังจากเมนู <strong>"ประวัติการสั่งซื้อ"</strong> (ออกแบบในอนาคต)</p>
+            <p>2. กรุณาตรวจสอบว่ามีโปรแกรมอ่านไฟล์ PDF ในเครื่องก่อนเปิดไฟล์</p>
+            <p>3. หากพบปัญหาในการดาวน์โหลด หรือต้องการใบเสร็จรับเงิน กรุณาติดต่อฝ่ายสนับสนุนของเรา</p>
+        </div>
+    </section>
+
+    <a href="loginfinish.html" class="btn-back-home">กลับสู่หน้าหลัก</a>
+</main>
+
+<script>
+    const cartCountElement = document.getElementById('cartCount');
+    const profileBtn = document.getElementById("profileBtn");
+    const dropdownMenu = document.getElementById("dropdownMenu");
+
+    // Header dropdown
+    if (profileBtn && dropdownMenu) {
+        profileBtn.addEventListener("click", function(e) {
+            e.preventDefault();
+            dropdownMenu.style.display =
+                dropdownMenu.style.display === "block" ? "none" : "block";
+        });
+
+        document.addEventListener("click", function(e) {
+            if (!profileBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                dropdownMenu.style.display = "none";
+            }
+        });
+    }
+
+    function loadCartCount() {
+        let storedCount = localStorage.getItem('cartCount');
+        if (cartCountElement) {
+            cartCountElement.textContent = storedCount ? storedCount : '0';
+        }
+    }
+
+    // สร้างเลข Order ID ง่าย ๆ จากวันที่
+    function generateOrderId() {
+        const now = new Date();
+        const y = now.getFullYear().toString().slice(-2);
+        const m = String(now.getMonth() + 1).padStart(2, '0');
+        const d = String(now.getDate()).padStart(2, '0');
+        const h = String(now.getHours()).padStart(2, '0');
+        const min = String(now.getMinutes()).padStart(2, '0');
+        return `SD${y}${m}${d}${h}${min}`;
+    }
+
+    function renderDownloadList() {
+        const downloadListEl = document.getElementById('downloadList');
+        const orderIdTextEl = document.getElementById('orderIdText');
+        const orderTotalTextEl = document.getElementById('orderTotalText');
+        const successSubtitleEl = document.getElementById('successSubtitle');
+
+        // อ่านข้อมูลออเดอร์จาก localStorage
+        const purchasedItems = JSON.parse(localStorage.getItem('purchasedItems') || '[]');
+        const checkoutTotal = parseFloat(localStorage.getItem('checkoutTotal') || '0');
+
+        // 👇 เพิ่มการแมพ id → ไฟล์ PDF ที่แท้จริงที่นี่
+        const fileMap = {
+            'TG001': 'https://drive.google.com/file/d/1JoBHMOYnDtkz5pbX7v6NTvjqRwVwCb1k/view?usp=sharing',
+            'TG002': 'https://drive.google.com/file/d/1PtMEC8PL-YLbrNXpn8FttbPO4zQ08jm3/view?usp=sharing',
+            'TG003': 'https://drive.google.com/file/d/1t4u_0uAf6V-OqjxT4EsB4DAv0rrYVrRa/view?usp=sharing',
+            'TP001': 'https://drive.google.com/file/d/1mU8q3wZF-DRSYJ0W675zmmKP44Gan5YF/view?usp=sharingpdf/TGAT3.pdf',
+             'TP002': 'https://drive.google.com/file/d/1ydMsMefx_A7gT7YfWUZV-nU6g2MkPZml/view?usp=sharing',
+             'AL001': 'https://drive.google.com/file/d/1T7hBCtHfZeZsuZ0t75SzO0oNaInsTYGl/view?usp=sharing',
+            'AL002': 'https://drive.google.com/file/d/172YGE-19roMntCRFa5KKB8fZ8Rnw74JE/view?usp=sharing',
+             'AL003': 'https://drive.google.com/file/d/172YGE-19roMntCRFa5KKB8fZ8Rnw74JE/view?usp=sharing',
+            // เพิ่มวิชาอื่น ๆ ต่อได้เลย
+        };
+
+        if (!purchasedItems || purchasedItems.length === 0) {
+            // ไม่มีออเดอร์
+            downloadListEl.innerHTML = `
+                <p class="empty-order-text">
+                    ตอนนี้ยังไม่มีรายการดาวน์โหลดจากออเดอร์ล่าสุด
+                    <br>กรุณากลับไปเลือกชีทและทำการชำระเงินอีกครั้ง
+                </p>
+            `;
+            orderIdTextEl.textContent = 'ไม่มีข้อมูลคำสั่งซื้อล่าสุด';
+            orderTotalTextEl.textContent = 'ยอดชำระรวม: ฿ 0';
+            if (successSubtitleEl) {
+                successSubtitleEl.textContent = 'ยังไม่พบข้อมูลออเดอร์ล่าสุดในระบบ';
+            }
+            return;
+        }
+
+        // ถ้ามีออเดอร์
+        const orderId = generateOrderId();
+        orderIdTextEl.textContent = `คำสั่งซื้อ #${orderId}`;
+        orderTotalTextEl.textContent = `ยอดชำระรวม: ฿ ${checkoutTotal.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
+
+        downloadListEl.innerHTML = '';
+
+        purchasedItems.forEach((item, index) => {
+            // ใช้ downloadUrl จาก localStorage ถ้ามี ถ้าไม่มีใช้จาก fileMap ตาม id
+            const resolvedDownloadUrl = item.downloadUrl && item.downloadUrl.trim()
+                ? item.downloadUrl
+                : (fileMap[item.id] || '');
+
+            // ถ้ายังหาไฟล์ไม่เจอจริง ๆ ก็ไม่ต้องแสดงรายการนั้น (ไม่สร้างปุ่ม "ยังไม่มีไฟล์")
+            if (!resolvedDownloadUrl) {
+                return;
+            }
+
+            const wrapper = document.createElement('div');
+            wrapper.className = 'download-item';
+
+            const name = item.name || `ชีท #${index + 1}`;
+            const meta = item.meta || 'ไฟล์ชีทดิจิทัล | ดาวน์โหลดได้ทันที';
+
+            const detailsHtml = `
+                <div class="file-details">
+                    <p class="file-name">${name}</p>
+                    <p class="file-meta">${meta}</p>
+                </div>
+            `;
+
+            // ปุ่มดาวน์โหลดอย่างเดียว (ไม่มีปุ่ม disabled แล้ว)
+            const buttonHtml = `
+                <a href="${resolvedDownloadUrl}" class="btn-download" target="_blank">
+                    ดาวน์โหลด <span>↓</span>
+                </a>
+            `;
+
+            wrapper.innerHTML = detailsHtml + buttonHtml;
+            downloadListEl.appendChild(wrapper);
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        loadCartCount();
+        renderDownloadList();
+    });
+</script>
+</body>
+</html>

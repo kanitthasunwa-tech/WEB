@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sheet Dek | ตะกร้าสินค้า</title>
+    <style>
+        /*
+         * ----------------------------------------------------
+         * 1. Global Setup & Variables
+         * ----------------------------------------------------
+         */
+        :root {
+            --primary-color: #5e0606; /* สีแดงเข้ม: แบรนด์, ปุ่มหลัก, การเน้น */
+            --secondary-color: #696969; /* สีเทาเข้ม: ข้อความรอง */
+            --white: #ffffff;
+            --light-grey: #f8f8f8; /* สีพื้นหลังหลัก */
+            --border-color: #e0e0e0;
+            --font-color: #333;
+            --box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            --dark-red: #8B0000;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: var(--light-grey);
+            line-height: 1.6;
+            color: var(--font-color);
+            padding-bottom: 50px;
+        }
+
+        /*
+         * ----------------------------------------------------
+         * 2. Header (ปรับปรุงตามโค้ดใหม่)
+         * ----------------------------------------------------
+         */
+        .main-header {
+            width: 100%;
+            background-color: var(--primary-color);
+            color: var(--white);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px; /* ปรับ Padding ตามโค้ดใหม่ */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            font-size: 40px; /* ปรับขนาด logo */
+            font-weight: bold;
+            flex-grow: 1;
+            text-align: center;
+        }
+
+        .icon-link {
+            color: var(--white);
+            text-decoration: none;
+            font-size: 20px; /* ปรับขนาด icon link */
+            margin-right: 15px;
+            padding: 5px;
+            transition: opacity 0.2s;
+        }
+
+        .header-icons {
+             display: flex;
+             align-items: center;
+        }
+
+        .profile-link {
+            background-color: var(--white);
+            color: var(--primary-color);
+            padding: 5px 15px; /* ปรับ Padding */
+            border-radius: 20px; /* ปรับ Border Radius */
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+        .profile-link:hover {
+            background-color: var(--primary-color);
+            color: var(--white);
+            outline: 2px solid var(--white);
+        }
+
+/* ----------------------------------------------------
+ * 3. ปุ่มกลม
+ * ---------------------------------------------------- */
+.btn-section {
+    margin-top: 60px;
+    display: flex;
+    justify-content: center;
+}
+.btn-group {
+    display: flex;
+    gap: 40px;
+}
+.btn {
+    width: 220px;
+    height: 150px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 32px;
+    font-weight: bold;
+    color: white;
+    text-decoration: none;
+}
+.tgat { background: #854129; }
+.tpat { background: #804506; }
+.alevel { background: #58142d; }
+
+/* ----------------------------------------------------
+ * 4. Card Layout
+ * ---------------------------------------------------- */
+.card-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 25px;
+    padding: 40px;
+    max-width: 1300px;
+    margin: auto;
+}
+
+.card {
+    background: white;
+    border-radius: 25px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.12);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: 0.2s;
+    height: 100%;
+    padding-bottom: 10px;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+}
+
+.card img {
+    width: 100%;
+    border-radius: 15px;
+}
+
+.card-title {
+    margin: 10px 15px 5px;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.seller-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-left: 15px;
+}
+
+.seller-info img {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+}
+
+.price-box {
+    display: flex;
+    align-items: center;
+    margin: 15px;
+}
+
+.cart {
+    background: #fff4a9;
+    padding: 8px 12px;
+    border-radius: 15px;
+    font-size: 22px;
+    margin-right: 10px;
+}
+
+.price-box span:last-child {
+    font-size: 26px;
+    font-weight: bold;
+    color: #333;
+}
+
+.detail {
+    font-size: 13px;
+    margin-left: 15px;
+    margin-top: -5px;
+    margin-bottom: 15px;
+    color: #777;
+    line-height: 1.2;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .card-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+@media (max-width: 500px) {
+    .card-container {
+        grid-template-columns: repeat(1, 1fr);
+    }
+}
+
+/* ----------------------------------------------------
+ * 5. Footer (เต็มจอเท่าหัวเว็บ)
+ * ---------------------------------------------------- */
+footer {
+    background: #5e0606;
+    padding: 50px 20px;
+}
+
+footer,
+footer * {
+    color: #ffffff;
+}
+
+/* Layout */
+.footer-container {
+    max-width: 1300px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+    justify-content: space-between;
+}
+
+.footer-logo {
+    width: 130px;
+    margin-bottom: 15px;
+}
+
+.footer-section {
+    flex: 1 1 180px;
+}
+
+.footer-section h3 {
+    font-size: 18px;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+.footer-section a {
+    display: block;
+    margin-bottom: 10px;
+    text-decoration: none;
+    color: #ffffff;
+    transition: 0.3s;
+}
+
+.footer-section a:hover {
+    opacity: 0.6;
+}
+
+.footer-bottom {
+    text-align: center;
+    padding: 25px 0 5px;
+    font-size: 14px;
+    color: #cccccc;
+    margin-top: 30px;
+    border-top: 1px solid #333;
+}
+
+@media (max-width: 768px) {
+    .footer-container {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .footer-section {
+        margin-top: 20px;
+    }
+} 
+#toast {
+    visibility: hidden;
+    min-width: 200px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 10px;
+    padding: 12px 20px;
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 14px;
+    opacity: 0;
+    transition: opacity 0.4s;
+    z-index: 9999;
+}
+#toast.show {
+    visibility: visible;
+    opacity: 1;
+}
+    </style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="main-header">
+    <a href="index.html" class="icon-link">หน้าหลัก</a>
+
+    <div class="logo">Sheet Dek</div>
+
+    <div class="header-icons">
+        <a href="cart1.html" class="icon-link">
+            ตะกร้าชีท🛒 <span id="cartCount" style="font-weight:bold;">0</span>
+        </a>
+        <a href="login.html" class="profile-link">เข้าสู่ระบบ</a>
+    </div>
+</header>
+
+<!-- ปุ่มกลม -->
+<div class="btn-section">
+  <div class="btn-group">
+    <a href="tgat.html" class="btn tgat">TGAT</a>
+    <a href="tpat.html" class="btn tpat">TPAT</a>
+    <a href="alevel.html" class="btn alevel">A-LEVEL</a>
+  </div>
+</div>
+
+<div style="width: 60%; margin: 0 auto;">
+  <div style="position: relative; width: 100%; height: 0; padding-top: 56.2225%;
+   box-shadow: 0 2px 8px rgba(63,69,81,0.16); margin-top: 1.6em; margin-bottom: 0.9em;
+   overflow: hidden; border-radius: 8px;">
+    <iframe loading="lazy"
+      style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; border: none;"
+      src="https://www.canva.com/design/DAG3iD0IMhY/TvjHj1DvXnPb6skqrrEngA/view?embed"
+      allowfullscreen>
+    </iframe>
+  </div>
+</div>
+
+<!-- Cards -->
+<div class="card-container">
+
+    <!-- Card 1 -->
+    <a href="producttg1.html" style="text-decoration:none;color:inherit;">
+        <div class="card">
+         <img src="https://i.ibb.co/8nTGTKDp/att-gcgd-Tnp-TXIECEk-Wf7n4-dg-Qzm7b1v-Zm-L2-ZIDBfd-PYmk.jpg" alt="">
+            <h3 class="card-title">TGAT 1 ภาษาอังกฤษ </h3>
+
+            <div class="seller-info">
+                <img src="https://www.toysrus.co.th/dw/image/v2/BDGJ_PRD/on/demandware.static/-/Sites-master-catalog-toysrus/default/dwef86a1c7/4/d/2/1/4d216108bb39237041733b8afc62afea9e89adc7_945059_i3.jpg?sw=394&sh=394&q=75">
+                <span>เจนนี่ ชอบอ่านหนังสือ</span>
+            </div>
+
+            <div class="price-box">
+                <span class="cart add-cart"
+                      data-name="TGAT 1 ภาษาอังกฤษ "
+                      data-id="TG001">🛒</span>
+                <span>99฿</span>
+            </div>
+        </div>
+    </a>
+
+  
+    <!-- Card 2 -->
+    <a href="producttg2.html" style="text-decoration:none;color:inherit;">
+        <div class="card">
+  <img src="https://i.ibb.co/XrVncCmZ/att-Sc-Vw7-L2fuzof1wqe66o-Ax-KXe987-Tyc-E-94t-QBv5-W1-Eo.jpg" alt="">
+            <h3 class="card-title">TGAT 2 คณิตศาสตร์ </h3>
+
+            <div class="seller-info">
+                <img src="https://www.toysrus.co.th/dw/image/v2/BDGJ_PRD/on/demandware.static/-/Sites-master-catalog-toysrus/default/dwfd23a02e/d/b/f/2/dbf2fa39d88d90dde57c5ad344306313232a4e47_945005_i1.jpg?sw=394&sh=394&q=75">
+                <span>อาตี๋ เซียนคณิต</span>
+            </div>
+
+            <div class="price-box">
+                <span class="cart add-cart"
+                      data-name="TGAT 2 คณิตศาสตร์ "
+                      data-id="TG002">🛒</span>
+                <span>59฿</span>
+            </div>
+        </div>
+    </a>
+
+    <!-- Card 3 -->
+    <a href="producttg3.html" style="text-decoration:none;color:inherit;">
+        <div class="card">
+         <img src="https://i.ibb.co/6R8fnzb2/att-Z-1cg96-6-QIl-Xw5-Ng-Q15ira34ix-Jl-Vu6u1um-Xtq-PJUs.jpg" alt="">
+            <h3 class="card-title">TGAT 3 สมรรถนะการทำงาน</h3>
+
+            <div class="seller-info">
+                   <img src="https://www.toysrus.co.th/dw/image/v2/BDGJ_PRD/on/demandware.static/-/Sites-master-catalog-toysrus/default/dwef86a1c7/4/d/2/1/4d216108bb39237041733b8afc62afea9e89adc7_945059_i3.jpg?sw=394&sh=394&q=75">
+                <span>พี่มอส</span>
+            </div>
+
+            <div class="price-box">
+                <span class="cart add-cart"
+                      data-name="TGAT 3 สมรรถนะการทำงาน"
+                      data-id="TG003">🛒</span>
+                <span>69฿</span>
+            </div>
+
+            <p class="detail">จำนวนหน้า 8 | ขายแล้ว 12</p>
+        </div>
+    </a>
+
+
+    <!-- Card 4 -->
+    <a href="หน้าสินค้าno.html" style="text-decoration:none;color:inherit;">
+        <div class="card">
+            <img src="https://i.ibb.co/prBFDWwx/att-Htzo26tjbpz-B0-KMJcz-GY4-Pk-y7-B-9-Tb-UR5-EQKN-b-FE.jpg">
+            <h3 class="card-title">A-Level ภาษาอังกฤษ </h3>
+
+            <div class="seller-info">
+                <img src="https://www.toysrus.co.th/dw/image/v2/BDGJ_PRD/on/demandware.static/-/Sites-master-catalog-toysrus/default/dwef86a1c7/4/d/2/1/4d216108bb39237041733b8afc62afea9e89adc7_945059_i3.jpg?sw=394&sh=394&q=75">
+                <span>เจนนี่ ชอบอ่านหนังสือ</span>
+            </div>
+
+            <div class="price-box">
+                <span class="cart add-cart"
+                      data-name="A-level ภาษาอังกฤษ "
+                      data-id="AL001">🛒</span>
+                <span>99฿</span>
+            </div>
+        </div>
+    </a>
+
+    <!-- Card 5 -->
+    <a href="หน้าสินค้าno1.html" style="text-decoration:none;color:inherit;">
+        <div class="card">
+           <img src="https://i.ibb.co/Kxb7GJrJ/A4.png" >
+            <h3 class="card-title">A-Level คณิตศาสตร์ 1 </h3>
+
+            <div class="seller-info">
+               <img src="https://www.toysrus.co.th/dw/image/v2/BDGJ_PRD/on/demandware.static/-/Sites-master-catalog-toysrus/default/dwfd23a02e/d/b/f/2/dbf2fa39d88d90dde57c5ad344306313232a4e47_945005_i1.jpg?sw=394&sh=394&q=75">
+                <span>อาตี๋ เซียนคณิต</span>
+            </div>
+
+            <div class="price-box">
+                <span class="cart add-cart"
+                      data-name="A-Level คณิตศาสตร์ 1 "
+                      data-id="AL002">🛒</span>
+                <span>59฿</span>
+            </div>
+        </div>
+    </a>
+
+    <!-- Card 6 -->
+<a href="หน้าสินค้าno2.html" style="text-decoration:none;color:inherit;">
+        <div class="card">
+            <img src="https://i.ibb.co/6RQhD0Wy/A4.png">
+            <h3 class="card-title">A-Level ภาษาญี่ปุ่น</h3>
+
+            <div class="seller-info">
+                <img src="https://storage.googleapis.com/fastwork-static/7cb764db-ea14-4e71-9c92-9a8fd54c3550.jpg">
+                <span>พี่มอส</span>
+            </div>
+
+            <div class="price-box">
+                <span class="cart add-cart"
+                      data-name="A-Level 3 ภาษาญี่ปุ่น"
+                      data-id="AL003">🛒</span>
+                <span>69฿</span>
+            </div>
+
+            <p class="detail">จำนวนหน้า 8 | ขายแล้ว 12</p>
+        </div>
+    </a>
+
+    <!-- Card 7 -->
+    <a href="หน้าสินค้าno3.html" style="text-decoration:none;color:inherit;">
+        <div class="card">
+<img src="https://i.ibb.co/bM3KBw6R/A4.png">
+            <h3 class="card-title">TPAT 1 ภาษาอังกฤษ </h3>
+            <div class="seller-info">
+                <img src="https://www.toysrus.co.th/dw/image/v2/BDGJ_PRD/on/demandware.static/-/Sites-master-catalog-toysrus/default/dwef86a1c7/4/d/2/1/4d216108bb39237041733b8afc62afea9e89adc7_945059_i3.jpg?sw=394&sh=394&q=75">
+                <span>เจนนี่ ชอบอ่านหนังสือ</span>
+            </div>
+
+            <div class="price-box">
+                <span class="cart add-cart"
+                      data-name="TPAT 1 ภาษาอังกฤษ "
+                      data-id="TG001">🛒</span>
+                <span>99฿</span>
+            </div>
+            <p class="detail">จำนวนหน้า 6 | ขายแล้ว 4</p>
+        </div>
+    </a>
+    <!-- Card 8 -->
+     <a href="หน้าสินค้าno5.html" style="text-decoration:none;color:inherit;">
+        <div class="card">
+        <img src="https://i.ibb.co/gLsm1mZq/A4.png" >
+            <h3 class="card-title">TPAT 3 วิศวะกรรมศาสตร์</h3>
+
+            <div class="seller-info">
+                   <img src="https://storage.googleapis.com/fastwork-static/7cb764db-ea14-4e71-9c92-9a8fd54c3550.jpg">
+                <span>พี่มอส</span>
+            </div>
+
+            <div class="price-box">
+                <span class="cart add-cart"
+                      data-name="TPAT 3 สมรรถนะการทำงาน"
+                      data-id="TG002">🛒</span>
+                <span>69฿</span>
+            </div>
+
+            <p class="detail">จำนวนหน้า 8 | ขายแล้ว 12</p>
+        </div>
+    </a>
+
+    <div id="toast"></div>
+</div>
+
+
+<!-- Footer -->
+<footer>
+    <div class="footer-container">
+
+        <div class="footer-section contact-info">
+            <h3 class="footer-title">ติดต่อเรา</h3>
+            <p>โทร: 02-594815477</p>
+            <ul>
+                <li><a href="#">Instagram</a></li>
+                <li><a href="#">Facebook</a></li>
+            </ul>
+        </div>
+
+       <div class="footer-section nav-links">
+            <h3 class="footer-title">ลิงก์ด่วน</h3>
+            <ul>
+                <li><a href="#">ชีทของฉัน</a></li>
+                <li><a href="#">ขายชีท</a></li>
+                <li><a href="#">ตะกร้าชีท</a></li>
+                <li><a href="#">ซื้อชีท</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-section company-info">
+            <h3 class="footer-title">Sheet Dek</h3>
+            <p>&copy; 2025 Sheet Dek. All rights reserved.</p>
+        </div>
+
+    </div>
+</footer>
+
+<!-- --------------------------------
+     Search Cards
+----------------------------------->
+<script>
+function searchCards() {
+    const keyword = document.getElementById("searchInput").value.toLowerCase();
+    const cards = document.querySelectorAll(".card");
+
+    cards.forEach(card => {
+        const title = card.querySelector(".card-title").innerText.toLowerCase();
+        const linkWrapper = card.parentElement; // <a> ที่ครอบ card
+        linkWrapper.style.display = title.includes(keyword) ? "block" : "none";
+    });
+}
+</script>
+
+<!-- --------------------------------
+     (Option) Profile Dropdown – จะทำงานถ้ามี profileBtn + dropdownMenu
+----------------------------------->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const profileBtn = document.getElementById("profileBtn");
+    const dropdownMenu = document.getElementById("dropdownMenu");
+
+    if (profileBtn && dropdownMenu) {
+        profileBtn.addEventListener("click", function(e) {
+            e.preventDefault();
+            dropdownMenu.style.display =
+                dropdownMenu.style.display === "block" ? "none" : "block";
+        });
+
+        document.addEventListener("click", function(e) {
+            if (!profileBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                dropdownMenu.style.display = "none";
+            }
+        });
+    }
+});
+</script>
+
+<!-- --------------------------------
+     ระบบตะกร้า + localStorage (ใช้ร่วมกับ cart.html)
+----------------------------------->
+<script>
+const cartCountElement = document.getElementById("cartCount");
+const cartButtons = document.querySelectorAll(".add-cart");
+
+// ใช้ array เหมือนหน้า cart.html
+let cartItems = [];
+
+// 1. โหลดข้อมูลตะกร้าจาก localStorage
+function loadCart() {
+    const storedItems = localStorage.getItem('cartItems');
+    if (storedItems) {
+        try {
+            cartItems = JSON.parse(storedItems);
+        } catch (e) {
+            cartItems = [];
+        }
+    } else {
+        cartItems = [];
+    }
+    updateCartDisplay();
+}
+
+// 2. อัปเดตตัวเลขตะกร้าใน Header + บันทึกลง localStorage
+function updateCartDisplay() {
+    const totalCount = cartItems.length;
+    if (cartCountElement) {
+        cartCountElement.textContent = totalCount;
+    }
+    localStorage.setItem('cartItems', JSON.stringify(cartItems));
+    localStorage.setItem('cartCount', totalCount.toString());
+}
+
+// Toast แจ้งเตือน
+function showToast(message) {
+    const toast = document.getElementById("toast");
+    if (toast) {
+        toast.textContent = message;
+        toast.classList.add("show");
+        setTimeout(() => {
+            toast.classList.remove("show");
+        }, 1500);
+    }
+}
+
+// 3. เมื่อกดปุ่ม เพิ่มลงตะกร้า
+cartButtons.forEach(btn => {
+    btn.addEventListener("click", function(e) {
+        e.preventDefault();
+
+        const card = this.closest(".card");
+        const itemId = this.dataset.id;
+        const itemName = (this.dataset.name || "").trim();
+
+        // ดึงราคา เช่น "99฿" → 99
+        const priceText = card.querySelector(".price-box span:last-child").innerText || "0";
+        const price = parseInt(priceText.replace(/[^\d]/g, ""), 10) || 0;
+
+        // ดึงรูปสินค้า
+        const imgEl = card.querySelector("img");
+        const imgUrl = imgEl ? imgEl.src : "";
+
+        // ดึง meta (ชื่อผู้ขาย)
+        const sellerSpan = card.querySelector(".seller-info span");
+        const meta = sellerSpan ? sellerSpan.innerText : "";
+
+        // สร้าง object สินค้าแบบเดียวกับ cart.html
+        const newItem = {
+            id: itemId,
+            name: itemName,
+            price: price,
+            img: imgUrl,
+            meta: meta,
+            downloadUrl: "" // ยังไม่ใช้ก็ปล่อยว่างได้
+        };
+
+        // เพิ่มสินค้าเข้า array
+        cartItems.push(newItem);
+
+        // อัปเดตแสดงผล + เก็บลง localStorage
+        updateCartDisplay();
+
+        showToast(`เพิ่ม ${itemName} 1 ชิ้นลงตะกร้าแล้ว`);
+    });
+});
+
+// 4. Initialization
+loadCart();
+</script>
+
+</body>
+</html>

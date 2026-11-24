@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sheet Dek | ตะกร้าสินค้า</title>
+    <style>
+        /*
+         * ----------------------------------------------------
+         * 1. Global Setup & Variables
+         * ----------------------------------------------------
+         */
+        :root {
+            --primary-color: #5e0606;
+            --secondary-color: #696969;
+            --white: #ffffff;
+            --light-grey: #f8f8f8;
+            --border-color: #e0e0e0;
+            --font-color: #333;
+            --box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            --old-primary-color: #920000;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            transition: all 0.2s ease-in-out;
+        }
+
+        body {
+            background-color: var(--light-grey);
+            line-height: 1.6;
+            color: var(--font-color);
+            padding-bottom: 50px;
+            padding-top: 64px;
+        }
+
+        /* ----------------------------------------------------
+         * 2. Header
+         * ----------------------------------------------------
+         */
+        .main-header {
+            width: 100%;
+            background-color: var(--primary-color);
+            color: var(--white);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 40px;
+            font-weight: bold;
+            flex-grow: 1;
+            text-align: center;
+        }
+
+        .header-icons {
+            display: flex;
+            align-items: center;
+        }
+
+        .icon-link {
+            color: var(--white);
+            text-decoration: none;
+            font-size: 20px;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .profile-dropdown {
+            position: relative;
+            margin-left: 15px;
+        }
+
+        .profile-link {
+            background-color: var(--white);
+            padding: 0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+        }
+        .profile-link img {
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .profile-link:hover {
+            outline: 2px solid var(--white);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 45px;
+            right: 0;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+            padding: 10px 0;
+            display: none;
+            width: 150px;
+            z-index: 10;
+        }
+
+        .dropdown-menu a {
+            display: block;
+            padding: 10px 15px;
+            color: var(--font-color);
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .dropdown-menu a:hover {
+            background: #eee;
+            color: var(--primary-color);
+        }
+
+        /* ----------------------------------------------------
+         * 3. Layout Grid & Containers
+         * ----------------------------------------------------
+         */
+        .checkout-main-content {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .page-title {
+            font-size: 2.5em;
+            color: var(--old-primary-color);
+            margin-bottom: 30px;
+            text-align: center;
+            font-weight: 800;
+        }
+
+        .checkout-grid-container {
+            display: grid;
+            grid-template-columns: 3fr 2fr;
+            gap: 30px;
+            align-items: flex-start;
+        }
+
+        .checkout-section {
+            background-color: var(--white);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: var(--box-shadow);
+        }
+
+        .section-heading {
+            font-size: 1.6em;
+            color: var(--font-color);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+            font-weight: 700;
+        }
+
+        /*
+         * ----------------------------------------------------
+         * 4. Cart Items List & Actions
+         * ----------------------------------------------------
+         */
+        .cart-items-list {
+            padding: 0 10px;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .cart-item:last-of-type { border-bottom: none; }
+
+        .item-selection { margin-right: 15px; }
+        .item-selection input[type="checkbox"] { transform: scale(1.3); cursor: pointer; }
+
+        .cart-item img {
+            width: 80px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-right: 20px;
+        }
+
+        .item-details { flex-grow: 1; }
+        .item-name { font-weight: bold; font-size: 1.1em; color: #222; }
+        .item-meta { font-size: 0.9em; color: var(--secondary-color); }
+        .item-price { font-weight: 700; color: var(--old-primary-color); font-size: 1.2em; white-space: nowrap; }
+
+        .delete-btn {
+            background: none;
+            border: none;
+            font-size: 1.5em;
+            color: var(--secondary-color);
+            cursor: pointer;
+            padding: 10px 0 10px 10px;
+            transition: color 0.2s;
+        }
+        .delete-btn:hover { color: var(--old-primary-color); }
+
+        /* Action Bar (ลบทั้งหมด/เลือกทั้งหมด) */
+        .cart-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 25px;
+            padding: 20px 10px 0 10px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .select-all { display: flex; align-items: center; }
+        .select-all input[type="checkbox"] { transform: scale(1.3); margin-right: 10px; cursor: pointer; }
+        .select-all label { font-weight: bold; font-size: 1.1em; }
+
+        .btn-delete-selected {
+            background-color: var(--white);
+            color: var(--secondary-color);
+            border: 1px solid var(--border-color);
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-delete-selected:hover {
+            background-color: #f0f0f0;
+            color: var(--old-primary-color);
+            border-color: var(--old-primary-color);
+        }
+
+        /*
+         * ----------------------------------------------------
+         * 5. Order Summary Box & Totals
+         * ----------------------------------------------------
+         */
+        .order-summary-box {
+            position: sticky;
+            top: 80px;
+        }
+
+        .summary-item-list {
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+        }
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 1em;
+            color: var(--secondary-color);
+        }
+
+        .summary-details {
+            padding-bottom: 15px;
+            border-bottom: 1px dashed var(--border-color);
+            margin-bottom: 20px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .summary-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 10px;
+            margin-bottom: 25px;
+        }
+
+        .total-label {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .total-amount {
+            font-size: 2.2em;
+            font-weight: bold;
+            color: var(--old-primary-color);
+        }
+
+        /* ปุ่มยืนยันการสั่งซื้อ (Primary Button) */
+        .btn-confirm-order {
+            display: block;
+            text-align: center;
+            text-decoration: none;
+
+            width: 100%;
+            background-color: var(--old-primary-color);
+            color: var(--white);
+            border: none;
+            padding: 18px 20px;
+            border-radius: 50px;
+            font-size: 1.3em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            box-shadow: 0 6px 15px rgba(146, 0, 0, 0.4);
+        }
+
+        .btn-confirm-order:hover {
+            background-color: #A52A2A;
+        }
+
+        /*
+         * ----------------------------------------------------
+         * 6. Responsive Design
+         * ----------------------------------------------------
+         */
+        @media (max-width: 900px) {
+            .checkout-grid-container { grid-template-columns: 1fr; }
+            .order-summary-box { order: 1; position: static; margin-bottom: 20px; }
+            .cart-items-container { order: 2; }
+            .cart-item img { width: 50px; height: 70px; }
+            .main-header { padding: 10px 15px; }
+            .logo { font-size: 30px; }
+            body { padding-top: 54px; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="main-header">
+    <a href="loginfinish.html" class="icon-link">หน้าหลัก</a>
+
+    <div class="logo">Sheet Dek</div>
+
+    <div class="header-icons">
+        <a href="cart.html" class="icon-link">
+            ตะกร้าชีท🛒 <span id="cartCount" style="font-weight:bold;">0</span>
+        </a>
+
+        <div class="profile-dropdown">
+            <a class="profile-link" id="profileBtn">
+                <img src="https://img.lovepik.com/png/20231123/female-flat-person-line-icon-vector-minimal-ux_673976_wh1200.png"
+                     alt="Profile Avatar"
+                     style="width:32px; height:32px;">
+            </a>
+
+            <div class="dropdown-menu" id="dropdownMenu">
+                <a href="profile.html">โปรไฟล์ของฉัน</a>
+                <a href="index.html">ออกจากระบบ</a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main class="checkout-main-content">
+    <h1 class="page-title">ตะกร้าสินค้า & ชำระเงิน</h1>
+
+    <div class="checkout-grid-container">
+        <!-- ซ้าย: รายการสินค้า -->
+        <section class="checkout-section cart-items-container">
+            <h2 class="section-heading">รายการสินค้า (0 รายการ)</h2>
+
+            <div class="cart-items-list" id="cartItemList">
+                <!-- JS จะสร้าง .cart-item จาก localStorage -->
+            </div>
+
+            <div class="cart-actions">
+                <div class="select-all">
+                    <input type="checkbox" id="selectAll" checked>
+                    <label for="selectAll">เลือกทั้งหมด</label>
+                </div>
+
+                <form action="/delete-selected" method="POST" onsubmit="return deleteSelectedItems();">
+                    <button type="submit" class="btn-delete-selected">
+                        ลบสินค้าที่เลือก (0)
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- ขวา: สรุปยอด -->
+        <section class="checkout-section order-summary-box">
+            <h2 class="section-heading">สรุปยอดชำระ</h2>
+
+            <div class="summary-item-list">
+                <div class="summary-item">
+                    <p class="item-name">รวมราคาสินค้าที่เลือก</p>
+                    <p class="item-price" id="selectedItemsTotal">฿ 0</p>
+                </div>
+                <div class="summary-item">
+                    <p class="item-name">ค่าจัดส่ง (ไฟล์ดิจิทัล)</p>
+                    <p class="item-price">฿ 0</p>
+                </div>
+            </div>
+
+            <div class="summary-details">
+                <div class="summary-row">
+                    <span class="label">ราคาสินค้าทั้งหมด</span>
+                    <span class="value" id="subTotalValue">฿ 0</span>
+                </div>
+                <div class="summary-row" style="color: var(--old-primary-color);">
+                    <span class="label">ส่วนลดคูปอง</span>
+                    <span class="value" id="discountValue">- ฿ 0</span>
+                </div>
+                <div class="summary-row">
+                    <span class="label">ค่าธรรมเนียมการชำระ</span>
+                    <span class="value" id="feeValue">฿ 0</span>
+                </div>
+            </div>
+
+            <div class="summary-total">
+                <span class="total-label">ยอดที่ต้องชำระ</span>
+                <span class="total-amount" id="grandTotalValue">฿ 0</span>
+            </div>
+
+            <button type="button" id="confirmOrderBtn" class="btn-confirm-order">ยืนยันการสั่งซื้อ</button>
+        </section>
+    </div>
+</main>
+
+<script>
+    // 1. โหลดข้อมูลจาก localStorage + ตัวแปร Global
+    let cartItems = JSON.parse(localStorage.getItem('cartItems') || '[]');
+
+    const selectAllCheckbox = document.getElementById('selectAll');
+    const deleteSelectedButton = document.querySelector('.btn-delete-selected');
+    const selectedItemsTotalElement = document.getElementById('selectedItemsTotal');
+    const subTotalElement = document.getElementById('subTotalValue');
+    const grandTotalElement = document.getElementById('grandTotalValue');
+    const confirmOrderBtn = document.getElementById('confirmOrderBtn');
+    const cartCountElement = document.getElementById('cartCount');
+    const profileBtn = document.getElementById("profileBtn");
+    const dropdownMenu = document.getElementById("dropdownMenu");
+
+    let currentGrandTotal = 0;
+
+    // sync จำนวนในหัวเว็บจาก cartItems
+    if (cartCountElement) {
+        cartCountElement.textContent = cartItems.length;
+        localStorage.setItem('cartCount', cartItems.length.toString());
+    }
+
+    // 2. ฟังก์ชันแสดงสินค้าในตะกร้า
+    function renderCartFromLocalStorage() {
+        const cartListEl = document.getElementById('cartItemList');
+        cartListEl.innerHTML = '';
+
+        if (!cartItems || cartItems.length === 0) {
+            cartListEl.innerHTML = '<p style="text-align:center; color:#777;">ยังไม่มีสินค้าในตะกร้า</p>';
+            const heading = document.querySelector('.cart-items-container .section-heading');
+            if (heading) heading.textContent = `รายการสินค้า (0 รายการ)`;
+            updateTotals();
+            return;
+        }
+
+        cartItems.forEach((item, index) => {
+            const div = document.createElement('div');
+            div.className = 'cart-item';
+            div.setAttribute('data-item-id', item.id || index);
+            div.setAttribute('data-price', item.price || 0);
+            div.setAttribute('data-name', item.name || '');
+            div.setAttribute('data-meta', item.meta || '');
+            div.setAttribute('data-download-url', item.downloadUrl || '');
+
+            div.innerHTML = `
+                <div class="item-selection">
+                    <input type="checkbox" name="selected_items" checked>
+                </div>
+                <img src="${item.img || 'https://inwfile.com/s-do/6pnsyo.jpg'}" alt="${item.name || ''}">
+                <div class="item-details">
+                    <p class="item-name">${item.name || ''}</p>
+                    <p class="item-meta">${item.meta || ''}</p>
+                </div>
+                <p class="item-price">฿ ${item.price || 0}</p>
+                <button type="button" class="delete-btn" title="ลบสินค้านี้">🗑️</button>
+            `;
+
+            cartListEl.appendChild(div);
+
+            const deleteBtn = div.querySelector('.delete-btn');
+            deleteBtn.addEventListener('click', () => {
+                deleteSingleItem(item.id || index);
+            });
+        });
+
+        const heading = document.querySelector('.cart-items-container .section-heading');
+        if (heading) {
+            heading.textContent = `รายการสินค้า (${cartItems.length} รายการ)`;
+        }
+
+        setupCheckboxListeners();
+        updateTotals();
+    }
+
+    // 3. Helper Functions
+    function formatCurrency(amount) {
+        const num = Number.isFinite(amount) ? amount : 0;
+        return `฿ ${num.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
+    }
+
+    function checkLoginStatus() {
+        // ถ้าไม่มี profileBtn แสดงว่าเป็นหน้า guest (ยังไม่ล็อกอิน)
+        return !document.getElementById('profileBtn');
+    }
+
+    // 4. Logic การคำนวณและอัปเดตหน้าจอ
+    function updateTotals() {
+        const selectedCheckboxes = document.querySelectorAll('.cart-item input[type="checkbox"][name="selected_items"]:checked');
+        let newSubTotal = 0;
+
+        selectedCheckboxes.forEach(checkbox => {
+            const item = checkbox.closest('.cart-item');
+            const price = parseFloat(item.getAttribute('data-price')) || 0;
+            newSubTotal += price;
+        });
+
+        const discount = 0;
+        const fee = 0;
+        const grandTotal = newSubTotal - discount + fee;
+
+        currentGrandTotal = grandTotal;
+
+        const allItems = document.querySelectorAll('.cart-item').length;
+        const heading = document.querySelector('.cart-items-container .section-heading');
+        if (heading) {
+            heading.textContent = `รายการสินค้า (${allItems} รายการ)`;
+        }
+        if (cartCountElement) {
+            cartCountElement.textContent = allItems;
+            localStorage.setItem('cartCount', allItems.toString());
+        }
+
+        if (selectedItemsTotalElement) selectedItemsTotalElement.textContent = formatCurrency(newSubTotal);
+        if (subTotalElement) subTotalElement.textContent = formatCurrency(newSubTotal);
+        if (grandTotalElement) grandTotalElement.textContent = formatCurrency(grandTotal);
+
+        updateDeleteSelectedButton();
+
+        const allItemCheckboxes = document.querySelectorAll('.cart-item input[type="checkbox"][name="selected_items"]');
+        const allChecked = allItemCheckboxes.length > 0 && Array.from(allItemCheckboxes).every(cb => cb.checked);
+        if (selectAllCheckbox) {
+            selectAllCheckbox.checked = allChecked;
+        }
+    }
+
+    function updateDeleteSelectedButton() {
+        const visibleCheckboxes = document.querySelectorAll('.cart-item input[type="checkbox"][name="selected_items"]');
+        const checkedCount = Array.from(visibleCheckboxes).filter(cb => cb.checked).length;
+
+        if (deleteSelectedButton) {
+            deleteSelectedButton.textContent = `ลบสินค้าที่เลือก (${checkedCount})`;
+            deleteSelectedButton.disabled = checkedCount === 0;
+            deleteSelectedButton.style.opacity = checkedCount === 0 ? '0.6' : '1';
+        }
+    }
+
+    // 5. Logic การลบสินค้า
+    function deleteSingleItem(itemId) {
+        if (confirm(`คุณต้องการลบสินค้านี้ออกจากตะกร้าหรือไม่?`)) {
+            cartItems = cartItems.filter(item => (item.id || '').toString() !== itemId.toString());
+            localStorage.setItem('cartItems', JSON.stringify(cartItems));
+            localStorage.setItem('cartCount', cartItems.length.toString());
+
+            const itemElement = document.querySelector(`.cart-item[data-item-id="${itemId}"]`);
+            if (itemElement) {
+                itemElement.remove();
+            }
+
+            renderCartFromLocalStorage();
+        }
+        return false;
+    }
+
+    function deleteSelectedItems() {
+        const selectedElements = Array.from(document.querySelectorAll('.cart-item input[type="checkbox"]:checked'))
+            .map(cb => cb.closest('.cart-item'))
+            .filter(el => el !== null);
+
+        if (selectedElements.length === 0) {
+            alert("กรุณาเลือกสินค้าที่ต้องการลบ");
+            return false;
+        }
+
+        if (confirm(`คุณต้องการลบสินค้าที่เลือกทั้งหมด ${selectedElements.length} รายการหรือไม่?`)) {
+            const idsToDelete = selectedElements.map(el => el.getAttribute('data-item-id'));
+
+            cartItems = cartItems.filter(item => !idsToDelete.includes((item.id || '').toString()));
+            localStorage.setItem('cartItems', JSON.stringify(cartItems));
+            localStorage.setItem('cartCount', cartItems.length.toString());
+
+            renderCartFromLocalStorage();
+        }
+        return false;
+    }
+
+    // 6. Checkbox & Select All
+    function setupCheckboxListeners() {
+        document.querySelectorAll('.cart-item input[type="checkbox"][name="selected_items"]').forEach(checkbox => {
+            checkbox.removeEventListener('change', updateTotals);
+            checkbox.addEventListener('change', updateTotals);
+        });
+
+        if (selectAllCheckbox) {
+            selectAllCheckbox.removeEventListener('change', handleSelectAllChange);
+            selectAllCheckbox.addEventListener('change', handleSelectAllChange);
+        }
+    }
+
+    function handleSelectAllChange() {
+        const visibleCheckboxes = document.querySelectorAll('.cart-item input[type="checkbox"][name="selected_items"]');
+        visibleCheckboxes.forEach(checkbox => {
+            checkbox.checked = this.checked;
+        });
+        updateTotals();
+    }
+
+    // 7. ยืนยันการสั่งซื้อ
+    if (confirmOrderBtn) {
+        confirmOrderBtn.addEventListener('click', function(event) {
+            event.preventDefault();
+
+            const selectedItems = [];
+            const selectedCheckboxes = document.querySelectorAll('.cart-item input[type="checkbox"][name="selected_items"]:checked');
+
+            selectedCheckboxes.forEach(checkbox => {
+                const item = checkbox.closest('.cart-item');
+                selectedItems.push({
+                    name: item.getAttribute('data-name'),
+                    meta: item.getAttribute('data-meta'),
+                    downloadUrl: item.getAttribute('data-download-url')
+                });
+            });
+
+            localStorage.setItem('purchasedItems', JSON.stringify(selectedItems));
+            localStorage.setItem('checkoutTotal', currentGrandTotal.toFixed(2));
+
+            const isLoggedOut = checkLoginStatus();
+
+            if (isLoggedOut) {
+                const userConfirmed = confirm(
+                    "⚠️ คุณต้องเข้าสู่ระบบหรือลงทะเบียนก่อนจึงจะสามารถยืนยันการสั่งซื้อได้\n\nกด 'ตกลง' เพื่อไปยังหน้าเข้าสู่ระบบ/ลงทะเบียน"
+                );
+
+                if (userConfirmed) {
+                    window.location.href = 'login.html';
+                }
+            } else {
+                window.location.href = 'makepay.html';
+            }
+        });
+    }
+
+    // 8. Header Dropdown Logic
+    if (profileBtn && dropdownMenu) {
+        profileBtn.addEventListener("click", function(e) {
+            e.preventDefault();
+            dropdownMenu.style.display = dropdownMenu.style.display === "block" ? "none" : "block";
+        });
+        document.addEventListener("click", function(e) {
+            if (!profileBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                dropdownMenu.style.display = "none";
+            }
+        });
+    }
+
+    // 9. Initialization
+    document.addEventListener('DOMContentLoaded', function() {
+        renderCartFromLocalStorage();
+    });
+</script>
+</body>
+</html>

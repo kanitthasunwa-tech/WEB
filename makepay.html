@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sheet Dek | ยืนยันการชำระเงิน</title>
+    <style>
+        /* ----------------------------------------------------
+         * 1. Global Setup & Variables
+         * ----------------------------------------------------
+         */
+        :root {
+            --primary-color: #5e0606;
+            --secondary-color: #555555;
+            --danger-color: #D32F2F;
+            --accent-color: #FFD700;
+            --white: #ffffff;
+            --light-grey: #f4f4f4;
+            --border-color: #e0e0e0;
+            --font-color: #333333;
+            --box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            --old-primary-color: #920000;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            transition: all 0.2s ease-in-out;
+        }
+
+        body {
+            background-color: var(--light-grey);
+            line-height: 1.6;
+            color: var(--font-color);
+            padding-top: 64px;
+        }
+
+        /* ----------------------------------------------------
+         * 2. Header (Fixed + Dropdown Styling)
+         * ----------------------------------------------------
+         */
+        .main-header {
+            width: 100%;
+            background-color: var(--primary-color);
+            color: var(--white);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 40px;
+            font-weight: bold;
+            flex-grow: 1;
+            text-align: center;
+        }
+
+        .header-icons {
+            display: flex;
+            align-items: center;
+        }
+
+        .icon-link {
+            color: var(--white);
+            text-decoration: none;
+            font-size: 20px;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .profile-dropdown {
+            position: relative;
+            margin-left: 15px;
+        }
+
+        .profile-link {
+            background-color: var(--white);
+            padding: 0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+        }
+        .profile-link img {
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .profile-link:hover {
+            outline: 2px solid var(--white);
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 45px;
+            right: 0;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+            padding: 10px 0;
+            display: none;
+            width: 150px;
+            z-index: 10;
+        }
+        .dropdown-menu a {
+            display: block;
+            padding: 10px 15px;
+            color: var(--font-color);
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .dropdown-menu a:hover {
+            background: #eee;
+            color: var(--primary-color);
+        }
+
+        /* ----------------------------------------------------
+         * 3. Page Layout & Content Box
+         * ----------------------------------------------------
+         */
+        .payment-confirmation-content {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .checkout-title {
+            color: var(--old-primary-color);
+            margin-bottom: 5px;
+            font-size: 2.5em;
+            font-weight: 800;
+        }
+
+        .order-id-meta {
+            font-size: 1.1em;
+            color: var(--secondary-color);
+            margin-bottom: 40px;
+            font-weight: 500;
+        }
+
+        .payment-instruction-box {
+            background-color: var(--white);
+            padding: 0 40px 40px 40px;
+            border-radius: 18px;
+            box-shadow: var(--box-shadow);
+            text-align: center;
+            overflow: hidden;
+        }
+
+        /* ----------------------------------------------------
+         * 4. Countdown Timer
+         * ----------------------------------------------------
+         */
+        .countdown-timer-bar {
+            background-color: var(--danger-color);
+            color: var(--white);
+            padding: 15px 0;
+            margin-bottom: 30px;
+            font-size: 1.3em;
+            font-weight: bold;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        #countdownProgress {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.2);
+            z-index: -1;
+            transform-origin: left;
+            transition: transform 1s linear; /* ใช้ transform แทน width เพื่อความลื่นไหล */
+        }
+
+        #countdownDisplay {
+            margin-left: 10px;
+            padding: 5px 10px;
+            background-color: rgba(0,0,0,0.1);
+            border-radius: 6px;
+        }
+
+        .instruction-text {
+            margin-bottom: 25px;
+            color: #333;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+
+        /* ----------------------------------------------------
+         * 5. Payment Details & QR Code (Grid Layout)
+         * ----------------------------------------------------
+         */
+        .payment-details-section {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+            padding: 20px 0;
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            text-align: left;
+        }
+
+        .bank-info h3 {
+            color: var(--old-primary-color);
+            margin-bottom: 15px;
+            font-size: 1.6em;
+            font-weight: 700;
+        }
+
+        .bank-info-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            padding: 8px 15px;
+            background-color: var(--light-grey);
+            border-radius: 6px;
+        }
+
+        .bank-info-row span:first-child {
+            color: var(--secondary-color);
+        }
+
+        .bank-info-row strong {
+            color: #000;
+        }
+
+        .total-amount-box {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: var(--old-primary-color);
+            color: var(--white);
+            border-radius: 12px;
+            font-size: 1.4em;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .amount-value {
+            font-size: 2em;
+            font-weight: 800;
+            color: var(--accent-color);
+        }
+
+        .qr-code-area {
+            text-align: center;
+            padding: 10px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            background-color: #f9f9f9;
+        }
+
+        .qr-code-image {
+            width: 100%;
+            max-width: 180px;
+            height: auto;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        /* ----------------------------------------------------
+         * 6. Upload Slip Section
+         * ----------------------------------------------------
+         */
+        .upload-slip-area {
+            padding-top: 20px;
+        }
+
+        .upload-heading {
+            font-size: 1.8em;
+            color: var(--old-primary-color);
+            margin-bottom: 25px;
+            font-weight: 700;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+            max-width: 450px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+            font-size: 1.05em;
+        }
+
+        .input-group input[type="file"],
+        .input-group input[type="date"],
+        .input-group input[type="time"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 1em;
+            background-color: var(--white);
+        }
+
+        .btn-submit-slip {
+            background-color: var(--accent-color);
+            color: #333;
+            border: none;
+            padding: 18px 45px;
+            border-radius: 35px;
+            font-size: 1.3em;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 30px;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.5);
+        }
+
+        .btn-submit-slip:hover {
+            background-color: #FFC400;
+            transform: translateY(-2px);
+        }
+
+        .note-text {
+            margin-top: 15px;
+            font-size: 0.95em;
+            color: var(--secondary-color);
+            font-style: italic;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .payment-details-section {
+                grid-template-columns: 1fr;
+            }
+            .total-amount-box {
+                font-size: 1.2em;
+            }
+            .amount-value {
+                font-size: 1.5em;
+            }
+            body { padding-top: 54px; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="main-header">
+    <a href="loginfinish.html" class="icon-link">หน้าหลัก</a>
+
+    <div class="logo">Sheet Dek</div>
+
+    <div class="header-icons">
+        <a href="cart.html" class="icon-link">
+            ตะกร้าชีท🛒 <span id="cartCount" style="font-weight:bold;">0</span>
+        </a>
+
+        <div class="profile-dropdown">
+            <a class="profile-link" id="profileBtn">
+                <img src="https://img.lovepik.com/png/20231123/female-flat-person-line-icon-vector-minimal-ux_673976_wh1200.png"
+                     alt="Profile Avatar"
+                     style="width:32px; height:32px;">
+            </a>
+
+            <div class="dropdown-menu" id="dropdownMenu">
+                <a href="profile.html">โปรไฟล์ของฉัน</a>
+                <a href="index.html">ออกจากระบบ</a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main class="payment-confirmation-content">
+    <h1 class="checkout-title"> ขั้นตอนสุดท้าย: ยืนยันการชำระเงิน</h1>
+    <p class="order-id-meta">
+        ยอดเงิน: <span id="metaTotalAmount">฿ 0.00</span>
+    </p>
+
+    <section class="payment-instruction-box">
+
+        <div class="countdown-timer-bar">
+            <div id="countdownProgress"></div>
+            ⏳ กรุณาชำระเงินภายใน: <span id="countdownDisplay">01:00:00</span>
+        </div>
+
+        <h2 class="instruction-heading" style="padding-top: 20px;">
+            โอนเงินเข้าบัญชี (<span id="headingTotalAmount">จำนวน ฿ 0.00</span>)
+        </h2>
+        <p class="instruction-text">
+            ชำระเงิน <strong><span id="instructionTotalAmount">ยอดรวม ฿ 0.00</span></strong>
+            โดยโอนเงินเข้าบัญชี หรือสแกน QR Code ด้านล่างนี้
+        </p>
+
+        <div class="payment-details-section">
+            <div class="bank-info">
+                <h3>ข้อมูลบัญชี</h3>
+
+                <div class="bank-info-row">
+                    <span>ธนาคาร:</span>
+                    <strong>ธนาคาร A</strong>
+                </div>
+                <div class="bank-info-row">
+                    <span>เลขที่บัญชี:</span>
+                    <strong>XXX-X-XXXXX-X</strong>
+                </div>
+                <div class="bank-info-row">
+                    <span>ชื่อบัญชี:</span>
+                    <strong>บริษัท ชีทเด็ก จำกัด</strong>
+                </div>
+
+                <div class="total-amount-box">
+                    <span>ยอดที่ต้องชำระ:</span>
+                    <span class="amount-value" id="finalTotalAmount">฿ 0.00</span>
+                </div>
+            </div>
+
+            <div class="qr-code-area">
+                <p style="font-weight: bold; margin-bottom: 5px;">QR Code</p>
+                <img src="https://img.freepik.com/premium-vector/scan-me-qr-code-design-qr-code-payment-text-transfer-with-scan-me-button-vector-illustration_499431-1394.jpg?w=360"
+                     alt="QR Code สำหรับโอนเงิน"
+                     class="qr-code-image">
+                <p style="font-size: 0.9em; color: var(--secondary-color);">
+                    สแกนจ่ายผ่าน Mobile Banking
+                </p>
+            </div>
+        </div>
+
+        <hr style="margin: 30px 0; border: 0; border-top: 1px dashed var(--border-color);">
+
+        <div class="upload-slip-area">
+            <h2 class="upload-heading"> อัปโหลดหลักฐานการโอนเงิน (สลิป)</h2>
+
+            <!-- action ยังใส่ได้ แต่เราจะจัดการด้วย JS -->
+            <form id="paymentForm" action="dowlond.html" method="GET" enctype="multipart/form-data">
+                <div class="input-group">
+                    <label for="upload-slip">เลือกไฟล์สลิป (รูปภาพ/PDF):</label>
+                    <input type="file"
+                           id="upload-slip"
+                           name="upload-slip"
+                           accept="image/png, image/jpeg, application/pdf"
+                           required>
+                </div>
+
+                <button type="submit" class="btn-submit-slip">
+                    ยืนยันการชำระเงิน
+                </button>
+                <p class="note-text">
+                    * ระบบจะตรวจสอบสลิปภายใน <strong>5-10 นาที</strong> หลังการยืนยัน<br>
+                    * หากสำเร็จ ระบบจะส่งลิงก์ดาวน์โหลดให้คุณทันที
+                </p>
+            </form>
+        </div>
+    </section>
+</main>
+
+<script>
+    const cartCountElement = document.getElementById('cartCount');
+    const profileBtn = document.getElementById("profileBtn");
+    const dropdownMenu = document.getElementById("dropdownMenu");
+    const paymentForm = document.getElementById("paymentForm");
+    const uploadSlipInput = document.getElementById("upload-slip");
+
+    // ----------------------------------------------------
+    // 1. Logic: ดึงยอดรวมจาก Local Storage และแสดงผล
+    // ----------------------------------------------------
+    function loadAndDisplayTotalAmount() {
+        // ดึงค่าจาก Local Storage ด้วยคีย์ 'checkoutTotal'
+        // ใช้ค่าเริ่มต้น 396.00 ถ้าไม่พบข้อมูล
+        const storedTotal = localStorage.getItem('checkoutTotal');
+        let totalAmount = storedTotal ? parseFloat(storedTotal) : 396.00;
+
+        if (isNaN(totalAmount)) {
+            totalAmount = 396.00; // ค่าเริ่มต้นสำรอง
+        }
+
+        const formattedAmount = '฿ ' +
+            totalAmount.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+        const metaTotal = document.getElementById('metaTotalAmount');
+        const headingTotal = document.getElementById('headingTotalAmount');
+        const instructionTotal = document.getElementById('instructionTotalAmount');
+        const finalTotal = document.getElementById('finalTotalAmount');
+
+        if (metaTotal) metaTotal.textContent = formattedAmount;
+        if (headingTotal) headingTotal.textContent = `จำนวน ${formattedAmount}`;
+        if (instructionTotal) instructionTotal.textContent = `ยอดรวม ${formattedAmount}`;
+        if (finalTotal) finalTotal.textContent = formattedAmount;
+    }
+
+    // ----------------------------------------------------
+    // 2. Load Cart Count (จาก Local Storage)
+    // ----------------------------------------------------
+    function loadCartCount() {
+        let storedCount = localStorage.getItem('cartCount');
+        if (cartCountElement) {
+            cartCountElement.textContent = storedCount ? storedCount : '0';
+        }
+    }
+
+    // ----------------------------------------------------
+    // 3. JavaScript สำหรับ Timer
+    // ----------------------------------------------------
+    function startTimer(durationInSeconds) {
+        let timer = durationInSeconds;
+        const display = document.getElementById('countdownDisplay');
+        const progressBar = document.getElementById('countdownProgress');
+        const totalDuration = durationInSeconds;
+        const submitButton = document.querySelector('.btn-submit-slip');
+
+        const interval = setInterval(function () {
+            const hours = String(Math.floor(timer / 3600)).padStart(2, '0');
+            const minutes = String(Math.floor((timer % 3600) / 60)).padStart(2, '0');
+            const seconds = String(timer % 60).padStart(2, '0');
+
+            display.textContent = hours + ":" + minutes + ":" + seconds;
+
+            const progressScale = timer / totalDuration;
+            progressBar.style.transform = `scaleX(${progressScale})`;
+
+            if (timer < 600) {
+                progressBar.style.backgroundColor = 'rgba(255, 0, 0, 0.3)';
+            }
+
+            if (--timer < 0) {
+                clearInterval(interval);
+                display.textContent = "หมดเวลา";
+                progressBar.style.transform = 'scaleX(0)';
+
+                alert("หมดเวลาชำระเงิน กรุณาทำรายการใหม่");
+                if (submitButton) submitButton.disabled = true;
+            }
+        }, 1000);
+    }
+
+    // ----------------------------------------------------
+    // 4. ฟังก์ชันตอนกดยืนยันชำระเงิน
+    // ----------------------------------------------------
+    function handlePaymentSubmit(e) {
+        e.preventDefault();
+
+        // ต้องอัปโหลดสลิปก่อน
+        if (!uploadSlipInput || uploadSlipInput.files.length === 0) {
+            alert("กรุณาอัปโหลดสลิปก่อนยืนยันการชำระเงิน");
+            return;
+        }
+
+        // ดึงสินค้าจากตะกร้า
+        const cartItems = JSON.parse(localStorage.getItem('cartItems') || '[]');
+
+        if (!cartItems || cartItems.length === 0) {
+            const existingPurchased =
+                JSON.parse(localStorage.getItem('purchasedItems') || '[]');
+
+            if (!existingPurchased || existingPurchased.length === 0) {
+                alert("ไม่พบข้อมูลสินค้าในตะกร้า กรุณากลับไปเลือกชีทใหม่อีกครั้ง");
+                window.location.href = 'cart.html';
+                return;
+            } else {
+                localStorage.setItem('purchasedItems',
+                    JSON.stringify(existingPurchased));
+            }
+        } else {
+            // เก็บสินค้าในตะกร้าเป็น purchasedItems
+            localStorage.setItem('purchasedItems', JSON.stringify(cartItems));
+        }
+
+        // ตรวจสอบ checkoutTotal ถ้าไม่มีให้ลองคำนวณจากราคาสินค้า
+        let checkoutTotal = parseFloat(localStorage.getItem('checkoutTotal') || '0');
+        if (!checkoutTotal || isNaN(checkoutTotal)) {
+            const calcTotal = cartItems.reduce((sum, item) => {
+                const price = parseFloat(item.price || item.totalPrice || 0);
+                return sum + (isNaN(price) ? 0 : price);
+            }, 0);
+            checkoutTotal = calcTotal;
+            localStorage.setItem('checkoutTotal', String(checkoutTotal));
+        }
+
+        // เคลียร์ตะกร้า
+        localStorage.removeItem('cartItems');
+        localStorage.setItem('cartCount', '0');
+
+        // ไปหน้าโหลดไฟล์สำเร็จ
+        window.location.href = 'dowlond.html';
+    }
+
+    // ----------------------------------------------------
+    // 5. Header Dropdown Logic & Initialization
+    // ----------------------------------------------------
+    if (profileBtn && dropdownMenu) {
+        profileBtn.addEventListener("click", function(e) {
+            e.preventDefault();
+            dropdownMenu.style.display =
+                dropdownMenu.style.display === "block" ? "none" : "block";
+        });
+
+        document.addEventListener("click", function(e) {
+            if (!profileBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                dropdownMenu.style.display = "none";
+            }
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        loadAndDisplayTotalAmount(); // โหลดและแสดงยอดเงิน
+        loadCartCount();
+        const ONE_HOUR = 60 * 60;
+        startTimer(ONE_HOUR);
+
+        // ✅ ผูก event ตอน submit ฟอร์มจ่ายเงิน
+        if (paymentForm) {
+            paymentForm.addEventListener('submit', handlePaymentSubmit);
+        }
+    });
+</script>
+</body>
+</html>
