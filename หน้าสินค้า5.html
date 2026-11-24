@@ -1,0 +1,1144 @@
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sheet Dek | หน้าสินค้า</title>
+
+    <style>
+        :root {
+            --primary-color: #5e0606; /* สีแดงเข้ม (Header ใหม่) */
+            --primary-dark: #660909;  /* เงา 3D */
+            --secondary-color: #696969;
+            --accent-color: #FFC400;  /* เหลืองเน้น */
+            --accent-dark: #DDA000;
+            --success-color: #4CAF50;
+            --white: #ffffff;
+            --light-grey: #f4f4f4;
+            --border-color: #e0e0e0;
+            --text-color: #333;
+            --old-primary-color: #920000;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Sukhumvit Set', 'Kanit', 'Arial', sans-serif;
+        }
+
+        body {
+            padding-top: 64px;
+            background-color: var(--light-grey);
+        }
+
+        /* Header */
+        .main-header {
+            width: 100%;
+            background-color: var(--primary-color);
+            color: var(--white);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 40px;
+            font-weight: bold;
+            flex-grow: 1;
+            text-align: center;
+        }
+
+        .header-icons {
+            display: flex;
+            align-items: center;
+        }
+
+        .icon-link {
+            color: var(--white);
+            text-decoration: none;
+            font-size: 20px;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .profile-dropdown {
+            position: relative;
+            margin-left: 15px;
+        }
+
+        .profile-link {
+            background-color: var(--white);
+            padding: 0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+        }
+
+        .profile-link img {
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .profile-link:hover {
+            outline: 2px solid var(--white);
+            box-shadow: 0 0 5px rgba(255,255,255,0.5);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 45px;
+            right: 0;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+            padding: 10px 0;
+            display: none;
+            width: 150px;
+            z-index: 10;
+        }
+
+        .dropdown-menu a {
+            display: block;
+            padding: 10px 15px;
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .dropdown-menu a:hover {
+            background: #eee;
+            color: var(--primary-color);
+        }
+
+        /* Layout & Product */
+        .content-wrapper {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            color: var(--old-primary-color);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+            font-weight: bold;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid var(--border-color);
+            margin: 40px 0;
+        }
+
+        .product-detail-container {
+            background-color: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+
+        .product-detail-section {
+            display: flex;
+            gap: 40px;
+            flex-wrap: wrap;
+            align-items: flex-start;
+        }
+
+        .product-image-area {
+            flex: 1 1 40%;
+            max-width: 40%;
+            position: relative;
+        }
+
+        .image-carousel-wrapper {
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .image-slider {
+            display: flex;
+            transition: transform 0.3s ease-in-out;
+            width: 300%; /* 3 รูป */
+        }
+
+        .slide-image {
+            width: calc(100% / 3);
+            flex-shrink: 0;
+            aspect-ratio: 4/5;
+            object-fit: cover;
+            display: block;
+        }
+
+        .slider-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0,0,0,0.6);
+            color: var(--white);
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            z-index: 10;
+            font-size: 18px;
+            border-radius: 50%;
+            opacity: 0.8;
+            transition: opacity 0.2s, background-color 0.2s;
+        }
+
+        .slider-btn:hover {
+            opacity: 1;
+            background-color: var(--old-primary-color);
+        }
+
+        .prev { left: 15px; }
+        .next { right: 15px; }
+
+        .image-dots {
+            text-align: center;
+            padding: 15px 0 0;
+        }
+
+        .dot {
+            height: 10px;
+            width: 10px;
+            margin: 0 4px;
+            background-color: #bbb;
+            border-radius: 50%;
+            display: inline-block;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s;
+        }
+
+        .dot.active {
+            background-color: var(--old-primary-color);
+            transform: scale(1.2);
+        }
+
+        .product-info-area {
+            flex: 1 1 56%;
+            max-width: 56%;
+        }
+
+        .product-title {
+            font-size: 2.4em;
+            color: var(--old-primary-color);
+            margin-bottom: 5px;
+        }
+
+        .product-seller {
+            font-size: 1.1em;
+            color: var(--secondary-color);
+            margin-bottom: 25px;
+            border-bottom: 1px dashed var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        .price-box {
+            background-color: var(--light-grey);
+            padding: 20px 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            display: inline-flex;
+            align-items: flex-end;
+            gap: 15px;
+        }
+
+        .current-price {
+            font-size: 2.8em;
+            font-weight: 900;
+            color: var(--success-color);
+            line-height: 1;
+        }
+
+        .original-price {
+            font-size: 1.2em;
+            color: #999;
+            text-decoration: line-through;
+            margin-bottom: 5px;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 15px;
+            margin-top: 25px;
+        }
+
+        .btn-add-to-cart,
+        .btn-buy-now {
+            border: none;
+            flex: 1 1 100%;
+            padding: 16px 25px;
+            border-radius: 30px;
+            font-size: 1.15em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .btn-add-to-cart {
+            background-color: var(--old-primary-color);
+            color: var(--white);
+            box-shadow: 0 5px 0 0 var(--primary-dark);
+        }
+
+        .btn-buy-now {
+            background-color: var(--accent-color);
+            color: var(--text-color);
+            box-shadow: 0 5px 0 0 var(--accent-dark);
+        }
+
+        .btn-add-to-cart:active,
+        .btn-buy-now:active {
+            box-shadow: 0 0 0 0 var(--accent-dark);
+            transform: translateY(5px);
+        }
+
+        .btn-add-to-cart:hover,
+        .btn-buy-now:hover {
+            opacity: 0.95;
+        }
+
+        .seller-info-box {
+            background-color: var(--white);
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 5px solid var(--accent-color);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .review-item {
+            background-color: var(--white);
+            padding: 18px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 15px;
+            box-shadow: 0 1px 5px rgba(0,0,0,0.05);
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .reviewer-name {
+            font-weight: bold;
+            color: var(--old-primary-color);
+        }
+
+        .review-rating .stars {
+            color: var(--accent-color);
+            font-size: 1.4em;
+        }
+
+        .comment-submission-section {
+            padding-top: 15px;
+            margin-top: 25px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .comment-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background-color: var(--white);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .comment-form select,
+        .comment-form textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 1em;
+            box-sizing: border-box;
+        }
+
+        .submit-comment-btn {
+            align-self: flex-start;
+            background-color: var(--success-color);
+            color: var(--white);
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 1.05em;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.2s;
+        }
+
+        .submit-comment-btn:hover {
+            background-color: #388e3c;
+        }
+
+        .recommendation-slider-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 0;
+        }
+
+        .product-card-list {
+            flex-grow: 1;
+            display: flex;
+            overflow-x: scroll;
+            scroll-behavior: smooth;
+            gap: 20px;
+            padding: 10px 0 20px;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            scrollbar-color: var(--old-primary-color) var(--light-grey);
+        }
+
+        .product-card-list::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .product-card-list::-webkit-scrollbar-track {
+            background: var(--border-color);
+            border-radius: 10px;
+        }
+
+        .product-card-list::-webkit-scrollbar-thumb {
+            background: var(--old-primary-color);
+            border-radius: 10px;
+        }
+
+        .product-card-list::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+
+        .product-card {
+            flex: 0 0 200px;
+            background-color: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            border-color: var(--old-primary-color);
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+
+        .product-name {
+            font-weight: bold;
+            color: var(--text-color);
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+
+        .seller {
+            font-size: 0.9em;
+            color: var(--secondary-color);
+            margin-bottom: 10px;
+        }
+
+        .price-action {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 5px;
+            border-top: 1px dotted var(--border-color);
+            gap: 5px;
+        }
+
+        .price {
+            font-weight: 900;
+            color: var(--success-color);
+            font-size: 1.2em;
+        }
+
+        .sold-count {
+            font-size: 0.85em;
+            color: #999;
+        }
+
+        .add-to-cart-small {
+            background-color: var(--accent-color);
+            color: var(--text-color);
+            border: none;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .slider-control {
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            color: var(--old-primary-color);
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            font-size: 22px;
+            cursor: pointer;
+            line-height: 1;
+            flex-shrink: 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: background-color 0.2s, transform 0.2s;
+            z-index: 10;
+        }
+
+        .slider-control:hover {
+            background-color: var(--light-grey);
+            transform: scale(1.05);
+        }
+
+        .slider-control:disabled {
+            opacity: 0.3;
+            cursor: default;
+            transform: none;
+        }
+
+        @media (max-width: 992px) {
+            .product-image-area,
+            .product-info-area {
+                flex: 1 1 100%;
+                max-width: 100%;
+            }
+
+            .product-detail-section {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .btn-add-to-cart,
+            .btn-buy-now {
+                padding: 15px 20px;
+            }
+
+            .recommendation-slider-wrapper .slider-control {
+                display: none;
+            }
+
+            .product-card-list {
+                padding-bottom: 10px;
+            }
+
+            .logo {
+                font-size: 30px;
+            }
+
+            .icon-link {
+                font-size: 16px;
+                margin-right: 10px;
+            }
+
+            body {
+                padding-top: 54px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header class="main-header">
+    <a href="lo.html" class="icon-link">หน้าหลัก</a>
+
+    <div class="logo">Sheet Dek</div>
+
+    <div class="header-icons">
+        <a href="cart.html" class="icon-link">
+            ตะกร้าชีท🛒 <span id="cartCount" style="font-weight:bold;">0</span>
+        </a>
+
+        <div class="profile-dropdown">
+            <a class="profile-link" id="profileBtn">
+                <img src="https://img.lovepik.com/png/20231123/female-flat-person-line-icon-vector-minimal-ux_673976_wh1200.png"
+                     alt="Profile Avatar"
+                     style="width:32px; height:32px;">
+            </a>
+
+            <div class="dropdown-menu" id="dropdownMenu">
+                <a href="profile.html">โปรไฟล์ของฉัน</a>
+                <a href="index.html">ออกจากระบบ</a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="content-wrapper">
+    <main>
+        <!-- PRODUCT DETAIL -->
+        <div class="product-detail-container">
+            <section class="product-detail-section">
+
+                <!-- รูปสินค้า + สไลด์ -->
+                <div class="product-image-area">
+                    <div class="image-carousel-wrapper">
+                        <div class="image-slider" id="productImageSlider">
+                  <img src="https://i.ibb.co/gLsm1mZq/A4.png"
+                                 alt="ชีทสรุป TGAT 2 "
+                                 class="slide-image">
+                           <img src="https://i.ibb.co/6710GFsg/IMG-1734.jpg"
+                                 alt="ชีทสรุป ตัวอย่างหน้า 1"
+                                 class="slide-image">
+                            <img src="https://i.ibb.co/fY1t5VqQ/IMG-1733.jpg"
+                                 alt="ชีทสรุป ตัวอย่างหน้า 2"
+                                 class="slide-image">
+                        </div>
+
+                        <button class="slider-btn prev" onclick="changeSlide(-1)">&#10094;</button>
+                        <button class="slider-btn next" onclick="changeSlide(1)">&#10095;</button>
+                    </div>
+
+                    <div class="image-dots" id="imageDots"></div>
+                </div>
+
+                <!-- ข้อมูลสินค้า -->
+                <div class="product-info-area">
+                    <h1 class="product-title" data-item-id="TP002">
+                        ชีทสรุป TPAT 3 วิศวะกรรมศาสตร์
+                    </h1>
+                    <p class="product-seller">ผู้จัดทำ:พี่มอส </p>
+
+                    <div class="price-box">
+                        <span class="current-price" id="productPrice">59฿</span>
+                        <span class="original-price">฿79</span>
+                    </div>
+
+                    <div class="product-description">
+                        <h4>จุดเด่นของชีทสรุป</h4>
+                        <p>
+                            * สรุป TGAT 2 ที่ออกสอบบ่อยที่สุด<br>
+                            * รวมแนวข้อสอบ พร้อมเทคนิคทำคะแนน<br>
+                            * อัปเดตเนื้อหาตาม Blueprint ใหม่ล่าสุด ปี 2568
+                        </p>
+                    </div>
+
+                    <div class="quantity-control"
+                         style="display: flex; align-items: center; margin-bottom: 25px;">
+                        <span style="font-weight: bold; margin-right: 15px;">จำนวน:</span>
+                        <input type="number" id="productQuantity" value="1" min="1"
+                               style="width: 80px; padding: 8px; border: 1px solid #ccc; border-radius: 5px; text-align: center;">
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="btn-add-to-cart" id="addToCartBtn">🛒 เพิ่มลงตะกร้า</button>
+                        <button class="btn-buy-now" id="buyNowBtn">ซื้อเลย (พร้อมไปชำระเงิน)</button>
+                    </div>
+
+                    <div style="margin-top: 20px; font-size: 0.9em; color: var(--secondary-color); text-align: center;">
+                        <p>ไฟล์รูปแบบ PDF | ดาวน์โหลดได้ทันทีหลังชำระเงิน</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <hr>
+
+        <!-- รายละเอียดเพิ่ม & ผู้จัดทำ -->
+        <section class="product-details-and-seller">
+            <h2 class="section-title">รายละเอียดชีทและผู้จัดทำ</h2>
+
+            <div class="seller-info-box">
+                <h3 class="subtitle">ข้อมูลผู้จัดทำ:พี่มอส</h3>
+                <p class="description-text">
+                    มีประสบการณ์การสอนมากกว่า 5 ปี
+                    และมีผลงานชีทสรุปช่วยให้น้อง ๆ ติดคณะในฝันมาแล้วกว่า 1,000 คน
+                </p>
+            </div>
+
+            <div class="product-full-description"
+                 style="background-color: var(--white); padding: 25px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+                <h3 class="subtitle" style="color: var(--text-color);">รายละเอียดเนื้อหาเต็ม</h3>
+                <p class="description-text">
+                    ชีทสรุปฉบับเต็มเล่มนี้จัดทำขึ้นโดยเน้นการทำความเข้าใจหลักการสำคัญ
+                    และฝึกฝนข้อสอบจริงอย่างเข้มข้น เนื้อหามีการจัดเรียงเป็นหมวดหมู่
+                    อ่านง่ายสบายตา พร้อมตัวอย่างโจทย์และแนวคิดที่ช่วยให้จำได้เร็วขึ้น
+                </p>
+            </div>
+        </section>
+ <section class="review-section">
+
+
+ <hr>
+
+        <!-- รีวิว -->
+        <section class="review-section">
+            <h2 class="section-title">รีวิวจากลูกค้า (เฉลี่ย 4.5/5 คะแนน)</h2>
+
+            <div class="review-list">
+                <div class="review-item">
+                    <div class="review-header">
+                        <span class="reviewer-name">น้อง A (ม.6)</span>
+                        <span class="review-rating"><span class="stars">★★★★★</span></span>
+                    </div>
+                    <p class="review-body">
+                        ชีทสรุปดีมากค่ะ! อ่านเข้าใจง่าย เนื้อหาครบตามที่ออกสอบ ช่วยทวนก่อนสอบได้ดีมากเลย
+                    </p>
+                </div>
+            </div>
+        
+        </section>
+
+      
+        <hr>
+        <section class="recommendation-section">
+            <h2 class="section-title">ชีทแนะนำสำหรับคุณ (สุ่มใหม่ทุกครั้ง)</h2>
+
+            <div class="recommendation-slider-wrapper">
+                <button class="slider-control" id="prevRecoBtn"
+                        onclick="scrollRecommendation(-1)">&#10094;</button>
+
+                <div class="product-card-list" id="recommendation-list">
+                    <div class="product-card" data-link="หน้าสินค้า3.html">
+                        <img src="https://i.ibb.co/bM3KBw6R/A4.png">
+                        <p class="product-name">TPAT 1 ภาษาอังกฤษ</p>
+                        <p class="seller">เจนนี่ ชอบอ่านหนังสือ</p>
+                        <div class="price-action">
+                            <span class="price">฿59</span>
+                            <span class="sold-count">ขายแล้ว 4</span>
+                            <button class="add-to-cart-small">🛒</button>
+                        </div>
+                    </div>
+
+                         <div class="product-card" data-link="TProduct1loginpage.html">   
+         <img src="https://i.ibb.co/8nTGTKDp/att-gcgd-Tnp-TXIECEk-Wf7n4-dg-Qzm7b1v-Zm-L2-ZIDBfd-PYmk.jpg" alt="A-LEVEL English">
+                        <p class="product-name">TGAT 1 การสื่อสารอังกฤษ</p>
+                        <p class="seller">เจนนี่ ชอบอ่านหนังสือ</p>
+                        <div class="price-action">
+                            <span class="price">฿99</span>
+                            <span class="sold-count">ขายแล้ว 10</span>
+                            <button class="add-to-cart-small">🛒</button>
+                        </div>
+                    </div>
+
+                    <div class="product-card" data-link="TProduct2loginpage.html">
+                        <img src="https://i.ibb.co/XrVncCmZ/att-Sc-Vw7-L2fuzof1wqe66o-Ax-KXe987-Tyc-E-94t-QBv5-W1-Eo.jpg" alt="">
+                        <p class="product-name">TGAT 2 การคิดอย่างมีเหตุผล</p>
+                        <p class="seller">อาตี๋ เซียนคณิต</p>
+                        <div class="price-action">
+                            <span class="price">฿59</span>
+                            <span class="sold-count">ขายแล้ว 9</span>
+                            <button class="add-to-cart-small">🛒</button>
+                        </div>
+                    </div>
+
+                    <div class="product-card" data-link="หน้าสินค้า2.html">
+                        <img src="https://i.ibb.co/6RQhD0Wy/A4.png" >
+                        <p class="product-name">A-level ภาษาญี่ปุ่น</p>
+                        <p class="seller">พี่มอส</p>
+                        <div class="price-action">
+                            <span class="price">฿59</span>
+                            <span class="sold-count">ขายแล้ว 3</span>
+                            <button class="add-to-cart-small">🛒</button>
+                        </div>
+                    </div>
+
+                    <div class="product-card" data-link="หน้าสินค้า5.html">
+                        <img src="https://i.ibb.co/gLsm1mZq/A4.png" alt="A-Level Physics">
+                        <p class="product-name">TPAT 3 วิศวะกรรมศาสตร์</p>
+                        <p class="seller">พี่มอส</p>
+                        <div class="price-action">
+                            <span class="price">฿59</span>
+                            <span class="sold-count">ขายแล้ว 7</span>
+                            <button class="add-to-cart-small">🛒</button>
+                        </div>
+                    </div>
+
+                    <div class="product-card" data-link="หน้าสินค้า1.html">
+                       <img src="https://i.ibb.co/Kxb7GJrJ/A4.png" >
+                        <p class="product-name">A-Level คณิตศาสตร์</p>
+                        <p class="seller">อาตี๋ เซียนคณิต</p>
+                        <div class="price-action">
+                            <span class="price">฿59</span>
+                            <span class="sold-count">ขายแล้ว 7</span>
+                            <button class="add-to-cart-small">🛒</button>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="slider-control" id="nextRecoBtn"
+                        onclick="scrollRecommendation(1)">&#10095;</button>
+            </div>
+        </section>
+    </main>
+</div>
+
+<script>
+    // Header dropdown
+    const profileBtn   = document.getElementById("profileBtn");
+    const dropdownMenu = document.getElementById("dropdownMenu");
+    const cartCountEl  = document.getElementById("cartCount");
+    const productQuantityInput = document.getElementById("productQuantity");
+
+    if (profileBtn && dropdownMenu) {
+        profileBtn.addEventListener("click", function (e) {
+            e.preventDefault();
+            dropdownMenu.style.display =
+                dropdownMenu.style.display === "block" ? "none" : "block";
+        });
+
+        document.addEventListener("click", function (e) {
+            if (!profileBtn.contains(e.target) &&
+                !dropdownMenu.contains(e.target)) {
+                dropdownMenu.style.display = "none";
+            }
+        });
+    }
+
+    // A. Product Image Slider
+    let slideIndex = 0;
+    const slides        = document.querySelectorAll('.slide-image');
+    const slider        = document.getElementById('productImageSlider');
+    const dotsContainer = document.getElementById('imageDots');
+    const totalSlides   = slides.length;
+
+    function createDots() {
+        if (totalSlides === 0) return;
+        dotsContainer.innerHTML = '';
+        slides.forEach((slide, index) => {
+            const dot = document.createElement('span');
+            dot.classList.add('dot');
+            dot.setAttribute('onclick', `currentSlide(${index})`);
+            dotsContainer.appendChild(dot);
+        });
+    }
+
+    function showSlides() {
+        if (totalSlides === 0) return;
+
+        if (slideIndex >= totalSlides) { slideIndex = 0; }
+        if (slideIndex < 0) { slideIndex = totalSlides - 1; }
+
+        // คำนวณการเลื่อนที่ถูกต้อง (เนื่องจาก width: 300% สำหรับ 3 รูป)
+        const offset = -slideIndex * (100 / totalSlides);
+        slider.style.transform = `translateX(${offset}%)`;
+
+        const dots = document.querySelectorAll('.dot');
+        dots.forEach(dot => dot.classList.remove('active'));
+        if (dots[slideIndex]) {
+            dots[slideIndex].classList.add('active');
+        }
+    }
+
+    window.changeSlide = function (n) {
+        slideIndex += n;
+        showSlides();
+    }
+
+    window.currentSlide = function (n) {
+        slideIndex = n;
+        showSlides();
+    }
+
+    function initializeCarousel() {
+        createDots();
+        showSlides();
+    }
+
+    // *** ฟังก์ชันสำหรับสุ่มลำดับ Array (Fisher-Yates Shuffle) ***
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            // สลับตำแหน่ง
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+
+    // *** ฟังก์ชันสำหรับสุ่มรายการแนะนำและแสดงผล ***
+    function randomizeRecommendations() {
+        const listContainer = document.getElementById('recommendation-list');
+        if (!listContainer) return;
+
+        // 1. ดึง Element ของ Product Card ทั้งหมดออกมา
+        const cards = Array.from(listContainer.querySelectorAll('.product-card'));
+
+        // 2. สุ่มลำดับของ Array
+        shuffleArray(cards);
+
+        // 3. ล้างเนื้อหาเดิม
+        listContainer.innerHTML = '';
+
+        // 4. เพิ่ม Card ที่ถูกสุ่มกลับเข้าไปใน Container
+        cards.forEach(card => {
+            listContainer.appendChild(card);
+        });
+    }
+
+
+    // B. Recommendation Slider
+    const recommendationList = document.getElementById('recommendation-list');
+    const cardWidth = 200;
+    const gapWidth  = 20;
+
+    window.scrollRecommendation = function (direction) {
+        if (!recommendationList) return;
+        // เลื่อนไปประมาณ 3 cards + 3 gaps
+        const scrollDistance = (cardWidth * 3) + (gapWidth * 3);
+        recommendationList.scrollBy({
+            left: direction * scrollDistance,
+            behavior: 'smooth'
+        });
+        setTimeout(updateRecoButtonStatus, 500);
+    }
+
+    function updateRecoButtonStatus() {
+        if (!recommendationList) return;
+        const prevBtn = document.getElementById('prevRecoBtn');
+        const nextBtn = document.getElementById('nextRecoBtn');
+        const scrollLeft  = recommendationList.scrollLeft;
+        const scrollWidth = recommendationList.scrollWidth;
+        const clientWidth = recommendationList.clientWidth;
+
+        if (prevBtn) {
+            // ปุ่มซ้าย disabled เมื่ออยู่ที่จุดเริ่มต้น
+            prevBtn.disabled = (scrollLeft <= 0);
+        }
+        if (nextBtn) {
+            // ปุ่มขวา disabled เมื่อเลื่อนไปสุดทางแล้ว
+            nextBtn.disabled = (scrollWidth - scrollLeft - clientWidth < 1);
+        }
+    }
+
+    // C. Cart Logic (cartItems + checkoutTotal)
+    function loadCartCount() {
+        const items = JSON.parse(localStorage.getItem('cartItems') || '[]');
+        const count = items.length;
+        if (cartCountEl) {
+            cartCountEl.textContent = count.toString();
+        }
+        localStorage.setItem('cartCount', count.toString());
+    }
+
+    function getCurrentProductData() {
+        const titleEl = document.querySelector('.product-title');
+        const priceEl = document.getElementById('productPrice');
+        const firstImg = document.querySelector('.slide-image');
+
+        const itemId = (titleEl && titleEl.dataset.itemId)
+            ? titleEl.dataset.itemId
+            : 'TP002';
+
+        const itemName = titleEl
+            ? titleEl.textContent.trim()
+            : 'สินค้าไม่ระบุชื่อ';
+
+        let priceNumber = 0;
+        if (priceEl) {
+            const text = priceEl.textContent.replace('฿', '').trim();
+            const parsed = parseFloat(text);
+            if (!isNaN(parsed)) priceNumber = parsed;
+        }
+
+        const imgUrl = firstImg ? firstImg.src : '';
+
+        return {
+            id: itemId,
+            name: itemName,
+            price: priceNumber,
+            img: imgUrl,
+            meta: 'ไฟล์ PDF | ดาวน์โหลดได้ทันทีหลังชำระเงิน',
+            downloadUrl: ''
+        };
+    }
+
+    function addToCart() {
+        let quantityToAdd = parseInt(productQuantityInput.value) || 1;
+        if (quantityToAdd < 1) {
+            alert("กรุณาระบุจำนวนสินค้าอย่างน้อย 1 ชิ้น");
+            productQuantityInput.value = 1;
+            return;
+        }
+
+        const product = getCurrentProductData();
+        let cartItems = JSON.parse(localStorage.getItem('cartItems') || '[]');
+
+        for (let i = 0; i < quantityToAdd; i++) {
+            cartItems.push({ ...product });
+        }
+
+        localStorage.setItem('cartItems', JSON.stringify(cartItems));
+        localStorage.setItem('cartCount', cartItems.length.toString());
+        loadCartCount();
+
+        alert(`เพิ่มสินค้า "${product.name}" จำนวน ${quantityToAdd} ชิ้นลงตะกร้าแล้ว`);
+    }
+
+    function buyNow() {
+        let quantityToAdd = parseInt(productQuantityInput.value) || 1;
+        if (quantityToAdd < 1) {
+            alert("กรุณาระบุจำนวนสินค้าอย่างน้อย 1 ชิ้น");
+            productQuantityInput.value = 1;
+            return;
+        }
+
+        const product = getCurrentProductData();
+        let cartItems = JSON.parse(localStorage.getItem('cartItems') || '[]');
+
+        for (let i = 0; i < quantityToAdd; i++) {
+            cartItems.push({ ...product });
+        }
+
+        // เก็บสินค้าที่ต้องการซื้อลงตะกร้า (เผื่อกรณี Checkout หน้า Cart)
+        localStorage.setItem('cartItems', JSON.stringify(cartItems));
+        localStorage.setItem('cartCount', cartItems.length.toString());
+        loadCartCount();
+
+        // คำนวณยอดรวม (สำหรับรายการนี้เท่านั้น หากต้องการ Checkout ทันที)
+        const lineTotal = product.price * quantityToAdd;
+        localStorage.setItem('checkoutTotal', lineTotal.toFixed(2));
+
+        window.location.href = 'makepay.html';
+    }
+
+    // D1. ตะกร้าเล็กในการ์ดแนะนำ
+    function initRecommendedAddToCart() {
+        const smallCartButtons = document.querySelectorAll('.add-to-cart-small');
+
+        smallCartButtons.forEach((btn, index) => {
+            // ต้องลบ Event Listener เก่าออกก่อน หากมี เพื่อป้องกันการซ้ำซ้อน
+            btn.removeEventListener('click', handleSmallCartClick);
+            btn.addEventListener('click', handleSmallCartClick);
+        });
+    }
+
+    function handleSmallCartClick(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const card = this.closest('.product-card');
+        if (!card) return;
+
+        const nameEl   = card.querySelector('.product-name');
+        const sellerEl = card.querySelector('.seller');
+        const priceEl  = card.querySelector('.price');
+        const imgEl    = card.querySelector('img');
+
+        const name   = nameEl   ? nameEl.textContent.trim()  : 'สินค้าแนะนำ';
+        const seller = sellerEl ? sellerEl.textContent.trim() : '';
+        const priceText = priceEl ? priceEl.textContent : '0';
+        // ดึงตัวเลขออกจากสตริงราคา
+        const price  = parseFloat(priceText.replace(/[^\d.]/g, '')) || 0;
+        const imgUrl = imgEl ? imgEl.src : '';
+
+        const itemId = `RECO-${name.substring(0, 3)}-${Date.now()}`;
+
+        let cartItems = JSON.parse(localStorage.getItem('cartItems') || '[]');
+
+        cartItems.push({
+            id: itemId,
+            name: name,
+            price: price,
+            img: imgUrl,
+            meta: seller,
+            downloadUrl: ''
+        });
+
+        localStorage.setItem('cartItems', JSON.stringify(cartItems));
+        localStorage.setItem('cartCount', cartItems.length.toString());
+        loadCartCount();
+
+        alert(`เพิ่ม "${name}" ลงตะกร้าแล้ว`);
+    }
+
+    // D2. คลิกทั้งการ์ดไปหน้า product
+    function initRecommendedCardClick() {
+        const cards = document.querySelectorAll('.product-card');
+
+        cards.forEach(card => {
+             // ต้องลบ Event Listener เก่าออกก่อน
+            card.removeEventListener('click', handleCardClick);
+            card.addEventListener('click', handleCardClick);
+        });
+    }
+
+    function handleCardClick(event) {
+        const link = this.dataset.link;
+        // ตรวจสอบว่าไม่ได้คลิกที่ปุ่มตะกร้าเล็กภายใน Card
+        const isCartButton = event.target.classList.contains('add-to-cart-small');
+
+        // ถ้าคลิกที่ปุ่มตะกร้าเล็ก ให้ปล่อยให้ฟังก์ชัน handleSmallCartClick จัดการ
+        if (isCartButton) return;
+
+        if (link) {
+            window.location.href = link;
+        }
+    }
+
+    // Initialization
+    document.addEventListener('DOMContentLoaded', () => {
+        // 1. สุ่มลำดับรายการแนะนำ
+        randomizeRecommendations();
+
+        // 2. โหลดข้อมูลตะกร้า
+        loadCartCount();
+
+        // 3. เริ่มต้น Carousel รูปสินค้าหลัก
+        initializeCarousel();
+
+        // 4. อัพเดตสถานะปุ่มเลื่อนแถบแนะนำ
+        updateRecoButtonStatus();
+
+        if (recommendationList) {
+            recommendationList.addEventListener('scroll', updateRecoButtonStatus);
+        }
+
+        const addToCartBtn = document.getElementById('addToCartBtn');
+        const buyNowBtn    = document.getElementById('buyNowBtn');
+
+        if (addToCartBtn) {
+            addToCartBtn.addEventListener('click', addToCart);
+        }
+        if (buyNowBtn) {
+            buyNowBtn.addEventListener('click', buyNow);
+        }
+
+        if (productQuantityInput) {
+            productQuantityInput.addEventListener('change', function () {
+                let val = parseInt(this.value);
+                if (isNaN(val) || val < 1) {
+                    this.value = 1;
+                }
+            });
+        }
+
+        // 5. ผูก Event Listener ใหม่หลังจากสุ่มรายการเสร็จ
+        initRecommendedAddToCart();
+        initRecommendedCardClick();
+    });
+</script>
+</body>
+</html>

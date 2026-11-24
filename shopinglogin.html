@@ -1,0 +1,259 @@
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sheet Dek | ลงทะเบียน</title>
+
+    <style>
+/* ----------------------------------------------------
+ * 1. Global Reset & Basic Styling
+ * ---------------------------------------------------- */
+:root {
+    --primary-color: #5e0606;
+    --secondary-color: #696969;
+    --white: #ffffff;
+    --dark-red: #8B0000;
+    --font-color: #333;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: var(--white);
+    line-height: 1.6;
+    color: var(--font-color);
+}
+
+/* ----------------------------------------------------
+ * 2. Header
+ * ---------------------------------------------------- */
+.main-header {
+    width: 100%;
+    background-color: var(--primary-color);
+    color: var(--white);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+}
+
+.logo {
+    font-size: 40px;
+    font-weight: bold;
+    flex-grow: 1;
+    text-align: center;
+}
+
+.header-icons {
+    display: flex;
+    align-items: center;
+}
+
+.icon-link {
+    color: var(--white);
+    text-decoration: none;
+    font-size: 20px;
+    margin-right: 15px;
+}
+
+.profile-link {
+    background-color: var(--white);
+    color: var(--primary-color);
+    padding: 0;
+    border-radius: 20px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-dropdown {
+    position: relative;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 45px;
+    right: 0;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+    padding: 10px 0;
+    display: none;
+    width: 150px;
+    z-index: 10;
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 10px 15px;
+    color: #333;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.dropdown-menu a:hover {
+    background: #eee;
+}footer {
+    background: #5e0606;
+    padding: 50px 20px;
+}
+
+ *  Footer
+ *
+footer {
+    background: #5e0606;
+    padding:50px 20px;
+}
+
+footer,
+footer * {
+    color: #ffffff;
+}
+
+.footer-container {
+    max-width: 1300px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+    justify-content: space-between;
+}
+
+.footer-section h3 {
+    font-size: 18px;
+    margin-bottom: 15px;
+}
+
+.footer-bottom {
+    text-align: center;
+    padding: 25px 0 5px;
+    font-size: 14px;
+    color: #cccccc;
+    margin-top: 30px;
+    border-top: 1px solid #333;
+}
+#toast {
+    visibility: hidden;
+    min-width: 200px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 10px;
+    padding: 12px 20px;
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 14px;
+    opacity: 0;
+    transition: opacity 0.4s;
+    z-index: 9999;
+}
+#toast.show {
+    visibility: visible;
+    opacity: 1;
+}
+    </style>
+</head>
+
+<body>
+<!-- Header -->
+<header class="main-header">
+    <a href="loginfinish.html" class="icon-link">หน้าหลัก</a>
+
+    <div class="logo">Sheet Dek</div>
+
+    <div class="header-icons">
+
+        <a href="cart.html" class="icon-link">
+            ตะกร้าชีท🛒 <span id="cartCount" style="font-weight:bold;">0</span>
+        </a>
+
+        <div class="profile-dropdown">
+            <a class="profile-link" id="profileBtn">
+                <img src="https://img.lovepik.com/png/20231123/female-flat-person-line-icon-vector-minimal-ux_673976_wh1200.png"
+                style="width:32px; height:32px; border-radius:50%;">
+            </a>
+
+            <div class="dropdown-menu" id="dropdownMenu">
+                <a href="index.html">ออกจากระบบ</a>
+            </div>
+        </div>
+
+    </div>
+</header>
+
+<script>
+// -------------------------------
+// Dropdown Menu (Profile)
+// -------------------------------
+document.addEventListener("DOMContentLoaded", () => {
+    const profileBtn = document.getElementById("profileBtn");
+    const dropdownMenu = document.getElementById("dropdownMenu");
+
+    if (profileBtn && dropdownMenu) {
+        profileBtn.addEventListener("click", function(e) {
+            e.preventDefault();
+            dropdownMenu.style.display =
+                dropdownMenu.style.display === "block" ? "none" : "block";
+        });
+
+        // คลิกข้างนอกเมนู → ปิด
+        document.addEventListener("click", function(e) {
+            if (!profileBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                dropdownMenu.style.display = "none";
+            }
+        });
+    }
+});
+</script>
+
+<script>
+// -------------------------------
+// ระบบตะกร้า + localStorage
+// -------------------------------
+
+// โหลดค่าตะกร้าจาก localStorage
+let cartCount = parseInt(localStorage.getItem("cartCount")) || 0;
+document.getElementById("cartCount").textContent = cartCount;
+
+const cartButtons = document.querySelectorAll(".add-cart");
+
+// ฟังก์ชัน Toast
+function showToast(message) {
+    const toast = document.getElementById("toast");
+    toast.textContent = message;
+    toast.classList.add("show");
+
+    setTimeout(() => {
+        toast.classList.remove("show");
+    }, 1500);
+}
+
+// เมื่อกดปุ่มเพิ่มลงตะกร้า
+cartButtons.forEach(btn => {
+    btn.addEventListener("click", function(e) {
+        e.preventDefault();
+
+        cartCount++;
+        localStorage.setItem("cartCount", cartCount);
+        document.getElementById("cartCount").textContent = cartCount;
+
+        const itemName = this.dataset.name;
+        showToast(`เพิ่ม ${itemName} ลงตะกร้าแล้ว`);
+    });
+});
+</script>
+
+
